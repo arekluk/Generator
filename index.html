@@ -107,7 +107,6 @@
         .bilingual-section p, .bilingual-section h1, .bilingual-section h2, .bilingual-section h3 {
             margin-bottom: 0.75em; 
         }
-        /* Language switcher styles */
         .language-switcher button {
             padding: 0.25rem 0.5rem;
             border: 1px solid transparent;
@@ -115,14 +114,88 @@
             font-size: 0.875rem;
         }
         .language-switcher button.active {
-            background-color: #DBEAFE; /* Tailwind blue-100 */
-            color: #1D4ED8; /* Tailwind blue-700 */
+            background-color: #DBEAFE; 
+            color: #1D4ED8; 
             font-weight: 600;
         }
-        /* Style for select options with flags */
         #documentLanguage option {
-            font-size: 1.25rem; /* Adjust emoji size if needed */
+            font-size: 1.25rem; 
             padding: 0.25rem;
+        }
+        .toc-questions {
+            margin-bottom: 1.5rem; 
+            padding-bottom: 1rem; 
+            border-bottom: 1px solid #E2E8F0; 
+        }
+        .toc-questions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .toc-questions li a {
+            display: block; padding: 0.5rem 0.75rem; 
+            border-radius: 0.375rem; text-decoration: none;
+            color: #475569; font-size: 0.875rem; font-weight: 500; 
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        .toc-questions li a:hover {
+            background-color: #F1F5F9; color: #1E293B; 
+        }
+        .toc-questions li a.active-toc-link { 
+            background-color: #EFF6FF; color: #2563EB; font-weight: 600; 
+        }
+
+        /* Style dla bocznej nawigacji i przycisku przełączania */
+        #toc-navigation-sidebar {
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+            /* Domyślnie ukryta na małych ekranach, wysuwana */
+            transform: translateX(-100%);
+            position: fixed; /* Nakładka na małych ekranach */
+            top: 0;
+            left: 0;
+            height: 100vh;
+            padding-top: 4rem; /* Miejsce na globalny header */
+            z-index: 40; /* Nad treścią, pod globalnym headerem */
+        }
+        #toc-navigation-sidebar.open {
+            transform: translateX(0);
+        }
+
+        #tocToggleButton {
+            transition: left 0.3s ease-in-out;
+        }
+
+        @media (min-width: 1024px) { /* lg breakpoint */
+            #toc-navigation-sidebar {
+                position: sticky; /* Przyklejona na dużych ekranach */
+                top: 4rem; /* Poniżej globalnego nagłówka */
+                height: calc(100vh - 4rem); /* Pełna wysokość minus nagłówek */
+                transform: translateX(0); /* Domyślnie widoczna */
+                padding-top: 1.5rem; /* Standardowy padding */
+                z-index: 30;
+            }
+            #toc-navigation-sidebar.closed-lg {
+                transform: translateX(-100%);
+                width: 0; /* Zwiń do zera, gdy zamknięta */
+                padding-left:0;
+                padding-right:0;
+                overflow:hidden;
+            }
+             #main-generator-area.shifted-lg {
+                margin-left: 16rem; /* 256px - szerokość paska bocznego (w-64) */
+                width: calc(100% - 16rem);
+            }
+            #main-generator-area.full-width-lg {
+                margin-left: 0;
+                width: 100%;
+            }
+            #tocToggleButton {
+                position: absolute; /* Względem kontenera flex */
+                top: 1.5rem; /* wyrównanie z paddingiem panelu pytań */
+                left: 0rem; /* Na krawędzi */
+            }
+            #tocToggleButton.shifted-lg {
+                left: 16rem; /* Przesuń z paskiem */
+            }
         }
     </style>
 </head>
@@ -250,252 +323,280 @@
                     </button>
                 </div>
             </section>
-        </div> <section id="generator-section-content" class="hidden pt-8 container mx-auto">
-            <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                <div class="w-full lg:w-2/5 questions-panel p-6 rounded-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 120px);">
-                    <h2 class="text-2xl font-semibold text-slate-700 mb-6 border-b border-slate-200 pb-4" data-lang-pl="Kreator Umowy o Zachowaniu Poufności (NDA)" data-lang-en="Non-Disclosure Agreement (NDA) Creator">Kreator Umowy o Zachowaniu Poufności (NDA)</h2>
+        </div> 
+        
+        <section id="generator-section-content" class="hidden pt-8 container mx-auto">
+            <div class="flex relative min-h-[calc(100vh-10rem)]">
 
-                    <div class="question-group mb-6 bg-white shadow-sm">
-                        <div class="question-group-header p-4 rounded-t-lg">
-                            <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Opcje Dokumentu" data-lang-en="Document Options">Opcje Dokumentu</h3>
-                        </div>
-                        <div class="p-4 space-y-5">
-                            <div class="question-item">
-                                <label for="documentLanguage" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Język dokumentu:" data-lang-en="Document language:">Język dokumentu:</label>
-                                <select id="documentLanguage" name="documentLanguage" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm">
-                                    <option value="pl">🇵🇱</option>
-                                    <option value="pl_en">🇵🇱 / 🇬🇧</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                <button id="tocToggleButton" title="Przełącz nawigację" 
+                        data-lang-pl-title="Przełącz nawigację" data-lang-en-title="Toggle navigation"
+                        class="fixed lg:absolute top-20 lg:top-6 left-0 z-40 p-2 bg-slate-700 text-white hover:bg-slate-600 rounded-r-md transition-all duration-300 ease-in-out">
+                    <svg id="tocOpenIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg id="tocCloseIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
 
-                    <div class="question-group mb-6 bg-white shadow-sm">
-                        <div class="question-group-header p-4 rounded-t-lg">
-                            <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Strony Umowy" data-lang-en="Parties to the Agreement">Strony Umowy</h3>
-                        </div>
-                        <div class="p-4 space-y-5">
-                            <div class="question-item">
-                                <label for="disclosingPartyName" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Strona Ujawniająca (pełna nazwa / firma):" data-lang-en="Disclosing Party (full name / company):">Strona Ujawniająca (pełna nazwa / firma):</label>
-                                <input type="text" id="disclosingPartyName" name="disclosingPartyName" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. Firma X Sp. z o.o.">
-                            </div>
-                            <div class="question-item">
-                                <label for="disclosingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Adres Strony Ujawniającej:" data-lang-en="Disclosing Party Address:">Adres Strony Ujawniającej:</label>
-                                <input type="text" id="disclosingPartyAddress" name="disclosingPartyAddress" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. ul. Innowacyjna 1, Warszawa">
-                            </div>
-                             <div class="question-item">
-                                <label for="receivingPartyName" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Strona Otrzymująca (pełna nazwa / firma):" data-lang-en="Receiving Party (full name / company):">Strona Otrzymująca (pełna nazwa / firma):</label>
-                                <input type="text" id="receivingPartyName" name="receivingPartyName" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. Jan Kowalski">
-                            </div>
-                            <div class="question-item">
-                                <label for="receivingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Adres Strony Otrzymującej:" data-lang-en="Receiving Party Address:">Adres Strony Otrzymującej:</label>
-                                <input type="text" id="receivingPartyAddress" name="receivingPartyAddress" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. ul. Projektowa 5, Kraków">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="question-group mb-6 bg-white shadow-sm">
-                        <div class="question-group-header p-4 rounded-t-lg">
-                            <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Przedmiot Umowy" data-lang-en="Subject of the Agreement">Przedmiot Umowy</h3>
-                        </div>
-                        <div class="p-4 space-y-5">
-                            <div class="question-item">
-                                <label for="disclosurePurpose" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Cel ujawnienia Informacji Poufnych:" data-lang-en="Purpose of disclosing Confidential Information:">Cel ujawnienia Informacji Poufnych:</label>
-                                <textarea id="disclosurePurpose" name="disclosurePurpose" rows="3" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. omówienie potencjalnej współpracy, analiza projektu Y"></textarea>
-                            </div>
-                            <div class="question-item">
-                                <label for="confidentialInfoDefinition" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Przykłady Informacji Poufnych (opcjonalnie):" data-lang-en="Examples of Confidential Information (optional):">Przykłady Informacji Poufnych (opcjonalnie):</label>
-                                <textarea id="confidentialInfoDefinition" name="confidentialInfoDefinition" rows="3" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. plany biznesowe, dane finansowe, kody źródłowe, listy klientów"></textarea>
-                            </div>
-                        </div>
-                    </div>
+                <div id="toc-navigation-sidebar"
+                     class="w-64 bg-white shadow-xl p-6 transition-transform duration-300 ease-in-out z-30 overflow-y-auto 
+                            fixed lg:sticky top-0 lg:top-auto lg:self-start h-full lg:h-auto lg:max-h-[calc(100vh-8rem)] 
+                            transform -translate-x-full lg:translate-x-0 pt-20 lg:pt-6">
                     
-                    <div class="question-group mb-6 bg-white shadow-sm">
-                        <div class="question-group-header p-4 rounded-t-lg">
-                            <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Okres Obowiązywania i Prawo" data-lang-en="Term and Governing Law">Okres Obowiązywania i Prawo</h3>
-                        </div>
-                        <div class="p-4 space-y-5">
-                            <div class="question-item">
-                                <label for="ndaTerm" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Okres obowiązywania poufności (np. 3 lata):" data-lang-en="Confidentiality period (e.g., 3 years):">Okres obowiązywania poufności (np. 3 lata):</label>
-                                <input type="text" id="ndaTerm" name="ndaTerm" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. 5 lat od daty ujawnienia">
-                            </div>
-                             <div class="question-item">
-                                <label for="governingLaw" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Prawo właściwe dla umowy:" data-lang-en="Governing law for the agreement:">Prawo właściwe dla umowy:</label>
-                                <select id="governingLaw" name="governingLaw" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm">
-                                    <option value="polskie">Prawo polskie</option>
-                                    <option value="niemieckie">Prawo niemieckie</option>
-                                    <option value="angielskie">Prawo angielskie</option>
-                                    <option value="inne">Inne (określ w umowie)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-8 pt-6 border-t border-slate-200">
-                        <button type="button" id="generateDocFinalButton" class="w-full bg-accent-orange text-white font-semibold px-6 py-3 rounded-lg hover-bg-accent-orange-dark transition-colors text-lg shadow-md hover:shadow-lg" data-lang-pl="Generuj Podgląd i Pobierz Dokument" data-lang-en="Generate Preview and Download Document">
-                            Generuj Podgląd i Pobierz Dokument
-                        </button>
+                    <div class="toc-questions">
+                        <h4 class="text-sm font-semibold text-slate-500 uppercase mb-3" data-lang-pl="Nawigacja Formularza" data-lang-en="Form Navigation">Nawigacja Formularza</h4>
+                        <ul>
+                            <li><a href="#group-doc-options" class="toc-link" data-lang-pl="Opcje Dokumentu" data-lang-en="Document Options">Opcje Dokumentu</a></li>
+                            <li><a href="#group-parties" class="toc-link" data-lang-pl="Strony Umowy" data-lang-en="Parties to the Agreement">Strony Umowy</a></li>
+                            <li><a href="#group-subject" class="toc-link" data-lang-pl="Przedmiot Umowy" data-lang-en="Subject of the Agreement">Przedmiot Umowy</a></li>
+                            <li><a href="#group-term-law" class="toc-link" data-lang-pl="Okres i Prawo" data-lang-en="Term and Law">Okres i Prawo</a></li>
+                        </ul>
                     </div>
                 </div>
 
-                <div class="w-full lg:w-3/5">
-                    <div class="sticky-preview-header p-4 rounded-t-xl -mt-8 lg:mt-0">
-                         <h2 class="text-xl font-semibold text-slate-700" data-lang-pl="Podgląd Dokumentu" data-lang-en="Document Preview">Podgląd Dokumentu</h2>
+                <div id="main-generator-area" class="flex-grow flex flex-col lg:flex-row gap-6 lg:gap-8 lg:ml-64 transition-all duration-300 ease-in-out w-full">
+                    <div id="questions-panel-main" class="w-full lg:w-1/2 questions-panel p-6 rounded-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 120px); scroll-behavior: smooth;">
+                        <h2 class="text-2xl font-semibold text-slate-700 mb-6 border-b border-slate-200 pb-4" data-lang-pl="Kreator Umowy o Zachowaniu Poufności (NDA)" data-lang-en="Non-Disclosure Agreement (NDA) Creator">Kreator Umowy o Zachowaniu Poufności (NDA)</h2>
+                    
+                        <div id="group-doc-options" class="question-group mb-6 bg-white shadow-sm">
+                           <div class="question-group-header p-4 rounded-t-lg">
+                                <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Opcje Dokumentu" data-lang-en="Document Options">Opcje Dokumentu</h3>
+                            </div>
+                            <div class="p-4 space-y-5">
+                                <div class="question-item">
+                                    <label for="documentLanguage" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Język dokumentu:" data-lang-en="Document language:">Język dokumentu:</label>
+                                    <select id="documentLanguage" name="documentLanguage" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm">
+                                        <option value="pl">🇵🇱</option>
+                                        <option value="pl_en">🇵🇱 / 🇬🇧</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="group-parties" class="question-group mb-6 bg-white shadow-sm">
+                            <div class="question-group-header p-4 rounded-t-lg">
+                                <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Strony Umowy" data-lang-en="Parties to the Agreement">Strony Umowy</h3>
+                            </div>
+                            <div class="p-4 space-y-5">
+                                <div class="question-item">
+                                    <label for="disclosingPartyName" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Strona Ujawniająca (pełna nazwa / firma):" data-lang-en="Disclosing Party (full name / company):">Strona Ujawniająca (pełna nazwa / firma):</label>
+                                    <input type="text" id="disclosingPartyName" name="disclosingPartyName" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. Firma X Sp. z o.o.">
+                                </div>
+                                <div class="question-item">
+                                    <label for="disclosingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Adres Strony Ujawniającej:" data-lang-en="Disclosing Party Address:">Adres Strony Ujawniającej:</label>
+                                    <input type="text" id="disclosingPartyAddress" name="disclosingPartyAddress" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. ul. Innowacyjna 1, Warszawa">
+                                </div>
+                                 <div class="question-item">
+                                    <label for="receivingPartyName" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Strona Otrzymująca (pełna nazwa / firma):" data-lang-en="Receiving Party (full name / company):">Strona Otrzymująca (pełna nazwa / firma):</label>
+                                    <input type="text" id="receivingPartyName" name="receivingPartyName" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. Jan Kowalski">
+                                </div>
+                                <div class="question-item">
+                                    <label for="receivingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Adres Strony Otrzymującej:" data-lang-en="Receiving Party Address:">Adres Strony Otrzymującej:</label>
+                                    <input type="text" id="receivingPartyAddress" name="receivingPartyAddress" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. ul. Projektowa 5, Kraków">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="group-subject" class="question-group mb-6 bg-white shadow-sm">
+                            <div class="question-group-header p-4 rounded-t-lg">
+                                <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Przedmiot Umowy" data-lang-en="Subject of the Agreement">Przedmiot Umowy</h3>
+                            </div>
+                            <div class="p-4 space-y-5">
+                                <div class="question-item">
+                                    <label for="disclosurePurpose" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Cel ujawnienia Informacji Poufnych:" data-lang-en="Purpose of disclosing Confidential Information:">Cel ujawnienia Informacji Poufnych:</label>
+                                    <textarea id="disclosurePurpose" name="disclosurePurpose" rows="3" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. omówienie potencjalnej współpracy, analiza projektu Y"></textarea>
+                                </div>
+                                <div class="question-item">
+                                    <label for="confidentialInfoDefinition" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Przykłady Informacji Poufnych (opcjonalnie):" data-lang-en="Examples of Confidential Information (optional):">Przykłady Informacji Poufnych (opcjonalnie):</label>
+                                    <textarea id="confidentialInfoDefinition" name="confidentialInfoDefinition" rows="3" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. plany biznesowe, dane finansowe, kody źródłowe, listy klientów"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="group-term-law" class="question-group mb-6 bg-white shadow-sm">
+                            <div class="question-group-header p-4 rounded-t-lg">
+                                <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Okres Obowiązywania i Prawo" data-lang-en="Term and Governing Law">Okres Obowiązywania i Prawo</h3>
+                            </div>
+                            <div class="p-4 space-y-5">
+                                <div class="question-item">
+                                    <label for="ndaTerm" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Okres obowiązywania poufności (np. 3 lata):" data-lang-en="Confidentiality period (e.g., 3 years):">Okres obowiązywania poufności (np. 3 lata):</label>
+                                    <input type="text" id="ndaTerm" name="ndaTerm" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. 5 lat od daty ujawnienia">
+                                </div>
+                                 <div class="question-item">
+                                    <label for="governingLaw" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Prawo właściwe dla umowy:" data-lang-en="Governing law for the agreement:">Prawo właściwe dla umowy:</label>
+                                    <select id="governingLaw" name="governingLaw" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm">
+                                        <option value="polskie">Prawo polskie</option>
+                                        <option value="niemieckie">Prawo niemieckie</option>
+                                        <option value="angielskie">Prawo angielskie</option>
+                                        <option value="inne">Inne (określ w umowie)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-slate-200">
+                            <button type="button" id="generateDocFinalButton" class="w-full bg-accent-orange text-white font-semibold px-6 py-3 rounded-lg hover-bg-accent-orange-dark transition-colors text-lg shadow-md hover:shadow-lg" data-lang-pl="Generuj Podgląd i Pobierz Dokument" data-lang-en="Generate Preview and Download Document">
+                                Generuj Podgląd i Pobierz Dokument
+                            </button>
+                        </div>
                     </div>
-                    <div id="documentPreviewContent" class="document-preview-content p-6 md:p-8 rounded-b-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 180px);">
-                        <div class="bilingual-section">
-                            <div class="lang-pl">
-                                <h1 class="text-2xl font-bold mb-6 text-center">UMOWA O ZACHOWANIU POUFNOŚCI (NDA)</h1>
-                            </div>
-                            <div class="lang-en hidden">
-                                <h1 class="text-2xl font-bold mb-6 text-center">NON-DISCLOSURE AGREEMENT (NDA)</h1>
-                            </div>
-                        </div>
-                        
-                        <div class="bilingual-section">
-                            <div class="lang-pl">
-                                <p>Zawarta w dniu <span id="preview_currentDate_pl" class="placeholder-text">[Data bieżąca]</span> w <span id="preview_ndaCity_pl" class="placeholder-text">[Miejscowość]</span> pomiędzy:</p>
-                            </div>
-                            <div class="lang-en hidden">
-                                <p>Concluded on <span id="preview_currentDate_en" class="placeholder-text">[Current Date]</span> in <span id="preview_ndaCity_en" class="placeholder-text">[City]</span> between:</p>
-                            </div>
-                        </div>
-                        
-                        <div class="bilingual-section mt-4">
-                            <div class="lang-pl">
-                                <p><strong>Stroną Ujawniającą:</strong></p>
-                                <p class="ml-4" id="preview_disclosingPartyInfo_pl">
-                                    <span id="preview_disclosingPartyName_pl" class="placeholder-text">[Nazwa Strony Ujawniającej]</span><br>
-                                    z siedzibą w <span id="preview_disclosingPartyAddress_pl" class="placeholder-text">[Adres Strony Ujawniającej]</span>
-                                </p>
-                            </div>
-                            <div class="lang-en hidden">
-                                <p><strong>Disclosing Party:</strong></p>
-                                <p class="ml-4" id="preview_disclosingPartyInfo_en">
-                                    <span id="preview_disclosingPartyName_en" class="placeholder-text">[Disclosing Party Name]</span><br>
-                                    with its registered office in <span id="preview_disclosingPartyAddress_en" class="placeholder-text">[Disclosing Party Address]</span>
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="bilingual-section my-3">
-                            <div class="lang-pl"><p>a</p></div>
-                            <div class="lang-en hidden"><p>and</p></div>
-                        </div>
-                        
-                        <div class="bilingual-section">
-                            <div class="lang-pl">
-                                <p><strong>Stroną Otrzymującą:</strong></p>
-                                <p class="ml-4" id="preview_receivingPartyInfo_pl">
-                                   <span id="preview_receivingPartyName_pl" class="placeholder-text">[Nazwa Strony Otrzymującej]</span><br>
-                                   z siedzibą w <span id="preview_receivingPartyAddress_pl" class="placeholder-text">[Adres Strony Otrzymującej]</span>
-                                </p>
-                            </div>
-                             <div class="lang-en hidden">
-                                <p><strong>Receiving Party:</strong></p>
-                                <p class="ml-4" id="preview_receivingPartyInfo_en">
-                                   <span id="preview_receivingPartyName_en" class="placeholder-text">[Receiving Party Name]</span><br>
-                                   with its registered office in <span id="preview_receivingPartyAddress_en" class="placeholder-text">[Receiving Party Address]</span>
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="bilingual-section mt-4">
-                            <div class="lang-pl"><p>zwanymi dalej łącznie „Stronami”, a każda z osobna „Stroną”.</p></div>
-                            <div class="lang-en hidden"><p>hereinafter collectively referred to as the "Parties" and individually as a "Party".</p></div>
-                        </div>
 
-                        <div class="bilingual-section mt-6">
-                            <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 1 Definicje</h2></div>
-                            <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 1 Definitions</h2></div>
+                    <div class="w-full lg:w-1/2">
+                        <div class="sticky-preview-header p-4 rounded-t-xl -mt-8 lg:mt-0">
+                             <h2 class="text-xl font-semibold text-slate-700" data-lang-pl="Podgląd Dokumentu" data-lang-en="Document Preview">Podgląd Dokumentu</h2>
                         </div>
-                        <div class="bilingual-section">
-                            <div class="lang-pl">
-                                <p>1. <strong>Informacje Poufne</strong> – oznaczają wszelkie informacje techniczne, handlowe, finansowe, organizacyjne, prawne lub inne posiadające wartość gospodarczą, ujawnione Stronie Otrzymującej przez Stronę Ujawniającą w jakiejkolwiek formie (pisemnej, ustnej, elektronicznej itp.) w związku z Celem Ujawnienia, w szczególności: <span id="preview_confidentialInfoDefinition_pl" class="placeholder-text">[Przykłady Informacji Poufnych]</span>.</p>
-                            </div>
-                            <div class="lang-en hidden">
-                                <p>1. <strong>Confidential Information</strong> – means any technical, commercial, financial, organizational, legal, or other information of economic value, disclosed to the Receiving Party by the Disclosing Party in any form (written, oral, electronic, etc.) in connection with the Purpose of Disclosure, in particular: <span id="preview_confidentialInfoDefinition_en" class="placeholder-text">[Examples of Confidential Information]</span>.</p>
-                            </div>
-                        </div>
-                        <div class="bilingual-section">
-                             <div class="lang-pl">
-                                <p>2. <strong>Cel Ujawnienia</strong> – oznacza: <span id="preview_disclosurePurpose_pl" class="placeholder-text">[Cel ujawnienia Informacji Poufnych]</span>.</p>
-                            </div>
-                            <div class="lang-en hidden">
-                                <p>2. <strong>Purpose of Disclosure</strong> – means: <span id="preview_disclosurePurpose_en" class="placeholder-text">[Purpose of disclosing Confidential Information]</span>.</p>
-                            </div>
-                        </div>
-
-                        <div class="bilingual-section mt-6">
-                            <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 2 Zobowiązanie do Poufności</h2></div>
-                            <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 2 Confidentiality Obligation</h2></div>
-                        </div>
-                        <div class="bilingual-section">
-                            <div class="lang-pl">
-                                <p>1. Strona Otrzymująca zobowiązuje się do zachowania w ścisłej tajemnicy wszelkich Informacji Poufnych uzyskanych od Strony Ujawniającej oraz do wykorzystywania ich wyłącznie w Celu Ujawnienia.</p>
-                            </div>
-                            <div class="lang-en hidden">
-                                <p>1. The Receiving Party undertakes to keep strictly confidential all Confidential Information obtained from the Disclosing Party and to use it solely for the Purpose of Disclosure.</p>
-                            </div>
-                        </div>
-                        <div class="bilingual-section">
-                            <div class="lang-pl">
-                                <p>2. Zobowiązanie do zachowania poufności obowiązuje przez okres <span id="preview_ndaTerm_pl" class="placeholder-text">[Okres obowiązywania poufności]</span>.</p>
-                            </div>
-                            <div class="lang-en hidden">
-                                <p>2. The confidentiality obligation shall remain in force for a period of <span id="preview_ndaTerm_en" class="placeholder-text">[Confidentiality Period]</span>.</p>
-                            </div>
-                        </div>
-
-                        <div class="bilingual-section mt-6">
-                            <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 3 Postanowienia Końcowe</h2></div>
-                            <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 3 Final Provisions</h2></div>
-                        </div>
-                        <div class="bilingual-section">
-                            <div class="lang-pl">
-                                <p>1. Prawem właściwym dla niniejszej Umowy jest <span id="preview_governingLaw_pl" class="placeholder-text">[Prawo właściwe]</span>.</p>
-                            </div>
-                            <div class="lang-en hidden">
-                                <p>1. The governing law for this Agreement shall be <span id="preview_governingLaw_en" class="placeholder-text">[Governing Law]</span>.</p>
-                            </div>
-                        </div>
-                        <div class="bilingual-section">
-                             <div class="lang-pl">
-                                <p>2. Wszelkie spory wynikające z niniejszej Umowy Strony będą starały się rozwiązać polubownie.</p>
-                            </div>
-                            <div class="lang-en hidden">
-                                <p>2. Any disputes arising from this Agreement shall be settled amicably by the Parties.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="bilingual-section mt-10">
-                            <div class="lang-pl"><p class="text-center text-slate-500"><span class="placeholder-text">[...] dalsze postanowienia umowy [...]</span></p></div>
-                            <div class="lang-en hidden"><p class="text-center text-slate-500"><span class="placeholder-text">[...] further provisions of the agreement [...]</span></p></div>
-                        </div>
-
-                        <div class="mt-12 pt-8 border-t border-slate-200 text-sm">
+                        <div id="documentPreviewContent" class="document-preview-content p-6 md:p-8 rounded-b-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 180px);">
                             <div class="bilingual-section">
                                 <div class="lang-pl">
-                                    <div class="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <p class="text-center">_________________________</p>
-                                            <p class="text-center">(Strona Ujawniająca)</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-center">_________________________</p>
-                                            <p class="text-center">(Strona Otrzymująca)</p>
-                                        </div>
-                                    </div>
+                                    <h1 class="text-2xl font-bold mb-6 text-center">UMOWA O ZACHOWANIU POUFNOŚCI (NDA)</h1>
                                 </div>
                                 <div class="lang-en hidden">
-                                     <div class="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <p class="text-center">_________________________</p>
-                                            <p class="text-center">(Disclosing Party)</p>
+                                    <h1 class="text-2xl font-bold mb-6 text-center">NON-DISCLOSURE AGREEMENT (NDA)</h1>
+                                </div>
+                            </div>
+                            
+                            <div class="bilingual-section">
+                                <div class="lang-pl">
+                                    <p>Zawarta w dniu <span id="preview_currentDate_pl" class="placeholder-text">[Data bieżąca]</span> w <span id="preview_ndaCity_pl" class="placeholder-text">[Miejscowość]</span> pomiędzy:</p>
+                                </div>
+                                <div class="lang-en hidden">
+                                    <p>Concluded on <span id="preview_currentDate_en" class="placeholder-text">[Current Date]</span> in <span id="preview_ndaCity_en" class="placeholder-text">[City]</span> between:</p>
+                                </div>
+                            </div>
+                            
+                            <div class="bilingual-section mt-4">
+                                <div class="lang-pl">
+                                    <p><strong>Stroną Ujawniającą:</strong></p>
+                                    <p class="ml-4" id="preview_disclosingPartyInfo_pl">
+                                        <span id="preview_disclosingPartyName_pl" class="placeholder-text">[Nazwa Strony Ujawniającej]</span><br>
+                                        z siedzibą w <span id="preview_disclosingPartyAddress_pl" class="placeholder-text">[Adres Strony Ujawniającej]</span>
+                                    </p>
+                                </div>
+                                <div class="lang-en hidden">
+                                    <p><strong>Disclosing Party:</strong></p>
+                                    <p class="ml-4" id="preview_disclosingPartyInfo_en">
+                                        <span id="preview_disclosingPartyName_en" class="placeholder-text">[Disclosing Party Name]</span><br>
+                                        with its registered office in <span id="preview_disclosingPartyAddress_en" class="placeholder-text">[Disclosing Party Address]</span>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="bilingual-section my-3">
+                                <div class="lang-pl"><p>a</p></div>
+                                <div class="lang-en hidden"><p>and</p></div>
+                            </div>
+                            
+                            <div class="bilingual-section">
+                                <div class="lang-pl">
+                                    <p><strong>Stroną Otrzymującą:</strong></p>
+                                    <p class="ml-4" id="preview_receivingPartyInfo_pl">
+                                       <span id="preview_receivingPartyName_pl" class="placeholder-text">[Nazwa Strony Otrzymującej]</span><br>
+                                       z siedzibą w <span id="preview_receivingPartyAddress_pl" class="placeholder-text">[Adres Strony Otrzymującej]</span>
+                                    </p>
+                                </div>
+                                 <div class="lang-en hidden">
+                                    <p><strong>Receiving Party:</strong></p>
+                                    <p class="ml-4" id="preview_receivingPartyInfo_en">
+                                       <span id="preview_receivingPartyName_en" class="placeholder-text">[Receiving Party Name]</span><br>
+                                       with its registered office in <span id="preview_receivingPartyAddress_en" class="placeholder-text">[Receiving Party Address]</span>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="bilingual-section mt-4">
+                                <div class="lang-pl"><p>zwanymi dalej łącznie „Stronami”, a każda z osobna „Stroną”.</p></div>
+                                <div class="lang-en hidden"><p>hereinafter collectively referred to as the "Parties" and individually as a "Party".</p></div>
+                            </div>
+
+                            <div class="bilingual-section mt-6">
+                                <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 1 Definicje</h2></div>
+                                <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 1 Definitions</h2></div>
+                            </div>
+                            <div class="bilingual-section">
+                                <div class="lang-pl">
+                                    <p>1. <strong>Informacje Poufne</strong> – oznaczają wszelkie informacje techniczne, handlowe, finansowe, organizacyjne, prawne lub inne posiadające wartość gospodarczą, ujawnione Stronie Otrzymującej przez Stronę Ujawniającą w jakiejkolwiek formie (pisemnej, ustnej, elektronicznej itp.) w związku z Celem Ujawnienia, w szczególności: <span id="preview_confidentialInfoDefinition_pl" class="placeholder-text">[Przykłady Informacji Poufnych]</span>.</p>
+                                </div>
+                                <div class="lang-en hidden">
+                                    <p>1. <strong>Confidential Information</strong> – means any technical, commercial, financial, organizational, legal, or other information of economic value, disclosed to the Receiving Party by the Disclosing Party in any form (written, oral, electronic, etc.) in connection with the Purpose of Disclosure, in particular: <span id="preview_confidentialInfoDefinition_en" class="placeholder-text">[Examples of Confidential Information]</span>.</p>
+                                </div>
+                            </div>
+                            <div class="bilingual-section">
+                                 <div class="lang-pl">
+                                    <p>2. <strong>Cel Ujawnienia</strong> – oznacza: <span id="preview_disclosurePurpose_pl" class="placeholder-text">[Cel ujawnienia Informacji Poufnych]</span>.</p>
+                                </div>
+                                <div class="lang-en hidden">
+                                    <p>2. <strong>Purpose of Disclosure</strong> – means: <span id="preview_disclosurePurpose_en" class="placeholder-text">[Purpose of disclosing Confidential Information]</span>.</p>
+                                </div>
+                            </div>
+
+                            <div class="bilingual-section mt-6">
+                                <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 2 Zobowiązanie do Poufności</h2></div>
+                                <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 2 Confidentiality Obligation</h2></div>
+                            </div>
+                            <div class="bilingual-section">
+                                <div class="lang-pl">
+                                    <p>1. Strona Otrzymująca zobowiązuje się do zachowania w ścisłej tajemnicy wszelkich Informacji Poufnych uzyskanych od Strony Ujawniającej oraz do wykorzystywania ich wyłącznie w Celu Ujawnienia.</p>
+                                </div>
+                                <div class="lang-en hidden">
+                                    <p>1. The Receiving Party undertakes to keep strictly confidential all Confidential Information obtained from the Disclosing Party and to use it solely for the Purpose of Disclosure.</p>
+                                </div>
+                            </div>
+                            <div class="bilingual-section">
+                                <div class="lang-pl">
+                                    <p>2. Zobowiązanie do zachowania poufności obowiązuje przez okres <span id="preview_ndaTerm_pl" class="placeholder-text">[Okres obowiązywania poufności]</span>.</p>
+                                </div>
+                                <div class="lang-en hidden">
+                                    <p>2. The confidentiality obligation shall remain in force for a period of <span id="preview_ndaTerm_en" class="placeholder-text">[Confidentiality Period]</span>.</p>
+                                </div>
+                            </div>
+
+                            <div class="bilingual-section mt-6">
+                                <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 3 Postanowienia Końcowe</h2></div>
+                                <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 3 Final Provisions</h2></div>
+                            </div>
+                            <div class="bilingual-section">
+                                <div class="lang-pl">
+                                    <p>1. Prawem właściwym dla niniejszej Umowy jest <span id="preview_governingLaw_pl" class="placeholder-text">[Prawo właściwe]</span>.</p>
+                                </div>
+                                <div class="lang-en hidden">
+                                    <p>1. The governing law for this Agreement shall be <span id="preview_governingLaw_en" class="placeholder-text">[Governing Law]</span>.</p>
+                                </div>
+                            </div>
+                            <div class="bilingual-section">
+                                 <div class="lang-pl">
+                                    <p>2. Wszelkie spory wynikające z niniejszej Umowy Strony będą starały się rozwiązać polubownie.</p>
+                                </div>
+                                <div class="lang-en hidden">
+                                    <p>2. Any disputes arising from this Agreement shall be settled amicably by the Parties.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="bilingual-section mt-10">
+                                <div class="lang-pl"><p class="text-center text-slate-500"><span class="placeholder-text">[...] dalsze postanowienia umowy [...]</span></p></div>
+                                <div class="lang-en hidden"><p class="text-center text-slate-500"><span class="placeholder-text">[...] further provisions of the agreement [...]</span></p></div>
+                            </div>
+
+                            <div class="mt-12 pt-8 border-t border-slate-200 text-sm">
+                                <div class="bilingual-section">
+                                    <div class="lang-pl">
+                                        <div class="grid grid-cols-2 gap-8">
+                                            <div>
+                                                <p class="text-center">_________________________</p>
+                                                <p class="text-center">(Strona Ujawniająca)</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-center">_________________________</p>
+                                                <p class="text-center">(Strona Otrzymująca)</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p class="text-center">_________________________</p>
-                                            <p class="text-center">(Receiving Party)</p>
+                                    </div>
+                                    <div class="lang-en hidden">
+                                         <div class="grid grid-cols-2 gap-8">
+                                            <div>
+                                                <p class="text-center">_________________________</p>
+                                                <p class="text-center">(Disclosing Party)</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-center">_________________________</p>
+                                                <p class="text-center">(Receiving Party)</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -564,14 +665,19 @@
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
 
-        // --- Document Language Choice ---
         const documentLanguageSelect = document.getElementById('documentLanguage');
         const documentPreviewContent = document.getElementById('documentPreviewContent');
 
-        // --- Global Page Language Switcher ---
         const langPlButton = document.getElementById('lang-pl-button');
         const langEnButton = document.getElementById('lang-en-button');
         const bodyElement = document.body;
+
+        // --- TOC Navigation ---
+        const tocSidebar = document.getElementById('toc-navigation-sidebar');
+        const tocToggleButton = document.getElementById('tocToggleButton');
+        const tocOpenIcon = document.getElementById('tocOpenIcon');
+        const tocCloseIcon = document.getElementById('tocCloseIcon');
+        const mainGeneratorArea = document.getElementById('main-generator-area');
 
         function setPageLanguage(lang) {
             bodyElement.setAttribute('data-current-lang', lang);
@@ -579,15 +685,16 @@
 
             document.querySelectorAll('[data-lang-pl]').forEach(el => {
                 const translation = (lang === 'en' && el.dataset.langEn) ? el.dataset.langEn : el.dataset.langPl;
-                // Check if the element is an input/button or a text element
                 if (el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
                     if (el.type === 'button' || el.type === 'submit' || el.tagName === 'BUTTON') {
-                        el.textContent = translation; // For button text
-                    } else {
-                        // Potentially for placeholder or value if needed, but mostly for textContent
+                        if (el.id === 'tocToggleButton') { // Specjalna obsługa dla title przycisku TOC
+                            el.setAttribute('title', (lang === 'en' && el.dataset.langEnTitle) ? el.dataset.langEnTitle : el.dataset.langPlTitle);
+                        } else {
+                            el.textContent = translation; 
+                        }
                     }
                 } else {
-                     el.innerHTML = translation; // Use innerHTML for elements that might contain <br>
+                     el.innerHTML = translation; 
                 }
             });
 
@@ -614,6 +721,11 @@
         function showGenerator(scrollTo = true) {
             if (landingPageContentWrapper) landingPageContentWrapper.classList.add('hidden');
             if (generatorSectionContent) generatorSectionContent.classList.remove('hidden');
+            // Domyślnie otwórz sidebar TOC na dużych ekranach przy pierwszym pokazaniu generatora
+            if (window.innerWidth >= 1024 && tocSidebar && !tocSidebar.classList.contains('open')) {
+                 toggleTocSidebar(true); // Wymuś otwarcie
+            }
+
             if (scrollTo) {
                 setTimeout(() => {
                     const generatorElement = document.getElementById('generator-section-content');
@@ -696,6 +808,73 @@
             });
         });
 
+        // --- TOC Sidebar Toggle Logic ---
+        function toggleTocSidebar(forceOpen = null) {
+            const isOpen = forceOpen !== null ? forceOpen : !tocSidebar.classList.contains('open');
+            
+            if (isOpen) {
+                tocSidebar.classList.remove('closed-lg', '-translate-x-full');
+                tocSidebar.classList.add('open', 'translate-x-0');
+                tocOpenIcon.classList.add('hidden');
+                tocCloseIcon.classList.remove('hidden');
+                if (window.innerWidth >= 1024) { // lg
+                    mainGeneratorArea.classList.remove('full-width-lg');
+                    mainGeneratorArea.classList.add('shifted-lg');
+                    tocToggleButton.classList.add('shifted-lg');
+                }
+            } else {
+                tocSidebar.classList.remove('open', 'translate-x-0');
+                tocSidebar.classList.add('-translate-x-full');
+                tocOpenIcon.classList.remove('hidden');
+                tocCloseIcon.classList.add('hidden');
+                if (window.innerWidth >= 1024) { // lg
+                    mainGeneratorArea.classList.remove('shifted-lg');
+                    mainGeneratorArea.classList.add('full-width-lg');
+                    tocToggleButton.classList.remove('shifted-lg');
+                    tocSidebar.classList.add('closed-lg');
+                }
+            }
+        }
+
+        if (tocToggleButton && tocSidebar && mainGeneratorArea) {
+            tocToggleButton.addEventListener('click', () => toggleTocSidebar());
+             // Domyślnie na dużych ekranach sidebar jest otwarty
+            if (window.innerWidth >= 1024) {
+                toggleTocSidebar(true);
+            } else {
+                toggleTocSidebar(false); // Domyślnie zamknięty na małych
+            }
+        }
+
+
+        // --- Spis Treści Generatora ---
+        const tocLinks = document.querySelectorAll('.toc-link');
+        const questionsPanelMain = document.getElementById('questions-panel-main');
+
+        tocLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId); // Cel jest wewnątrz questionsPanelMain
+                if (targetElement && questionsPanelMain) {
+                    tocLinks.forEach(l => l.classList.remove('active-toc-link'));
+                    this.classList.add('active-toc-link');
+                    
+                    const targetOffsetTop = targetElement.offsetTop;
+                    // Przewijanie kontenera questionsPanelMain
+                    questionsPanelMain.scrollTo({
+                        top: targetOffsetTop - questionsPanelMain.offsetTop - 10, // Niewielki offset dla lepszej widoczności nagłówka sekcji
+                        behavior: 'smooth'
+                    });
+                    // Zamknij sidebar na małych ekranach po kliknięciu
+                    if (window.innerWidth < 1024) {
+                        toggleTocSidebar(false);
+                    }
+                }
+            });
+        });
+
+
         // --- NDA Generator Logic ---
         const disclosingPartyNameInput = document.getElementById('disclosingPartyName');
         const disclosingPartyAddressInput = document.getElementById('disclosingPartyAddress');
@@ -706,7 +885,6 @@
         const ndaTermInput = document.getElementById('ndaTerm');
         const governingLawSelect = document.getElementById('governingLaw');
 
-        // Polish preview elements
         const previewCurrentDate_pl = document.getElementById('preview_currentDate_pl');
         const previewNdaCity_pl = document.getElementById('preview_ndaCity_pl');
         const previewDisclosingPartyName_pl = document.getElementById('preview_disclosingPartyName_pl');
@@ -718,7 +896,6 @@
         const previewNdaTerm_pl = document.getElementById('preview_ndaTerm_pl');
         const previewGoverningLaw_pl = document.getElementById('preview_governingLaw_pl');
 
-        // English preview elements
         const previewCurrentDate_en = document.getElementById('preview_currentDate_en');
         const previewNdaCity_en = document.getElementById('preview_ndaCity_en');
         const previewDisclosingPartyName_en = document.getElementById('preview_disclosingPartyName_en');
@@ -736,21 +913,21 @@
                 element_pl.innerHTML = displayValue_pl;
             }
             if (element_en) {
-                const displayValue_en = value ? value.replace(/\n/g, '<br>') : `<span class="placeholder-text">${placeholder_en_prefix}${placeholder_pl}]</span>`;
+                const displayValue_en = value ? value.replace(/\n/g, '<br>') : `<span class="placeholder-text">${placeholder_en_prefix}${placeholder_pl.replace(/^\[|\]$/g, '')}]</span>`; // Usuń nawiasy z polskiego placeholdera
                 element_en.innerHTML = displayValue_en;
             }
         }
         
-        updateBilingualPreviewText(previewCurrentDate_pl, previewCurrentDate_en, new Date().toLocaleDateString('pl-PL'), '[Data bieżąca]', '[Current Date]');
-        updateBilingualPreviewText(previewNdaCity_pl, previewNdaCity_en, 'Warszawa', '[Miejscowość]', '[City]'); 
+        updateBilingualPreviewText(previewCurrentDate_pl, previewCurrentDate_en, new Date().toLocaleDateString('pl-PL'), '[Data bieżąca]', '[Current Date: ');
+        updateBilingualPreviewText(previewNdaCity_pl, previewNdaCity_en, 'Warszawa', '[Miejscowość]', '[City: '); 
 
-        if (disclosingPartyNameInput) disclosingPartyNameInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosingPartyName_pl, previewDisclosingPartyName_en, disclosingPartyNameInput.value, '[Nazwa Strony Ujawniającej]', '[Disclosing Party Name]'));
-        if (disclosingPartyAddressInput) disclosingPartyAddressInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosingPartyAddress_pl, previewDisclosingPartyAddress_en, disclosingPartyAddressInput.value, '[Adres Strony Ujawniającej]', '[Disclosing Party Address]'));
-        if (receivingPartyNameInput) receivingPartyNameInput.addEventListener('input', () => updateBilingualPreviewText(previewReceivingPartyName_pl, previewReceivingPartyName_en, receivingPartyNameInput.value, '[Nazwa Strony Otrzymującej]', '[Receiving Party Name]'));
-        if (receivingPartyAddressInput) receivingPartyAddressInput.addEventListener('input', () => updateBilingualPreviewText(previewReceivingPartyAddress_pl, previewReceivingPartyAddress_en, receivingPartyAddressInput.value, '[Adres Strony Otrzymującej]', '[Receiving Party Address]'));
-        if (disclosurePurposeInput) disclosurePurposeInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosurePurpose_pl, previewDisclosurePurpose_en, disclosurePurposeInput.value, '[Cel ujawnienia Informacji Poufnych]', '[Purpose of Disclosure]'));
-        if (confidentialInfoDefinitionInput) confidentialInfoDefinitionInput.addEventListener('input', () => updateBilingualPreviewText(previewConfidentialInfoDefinition_pl, previewConfidentialInfoDefinition_en, confidentialInfoDefinitionInput.value, '[Przykłady Informacji Poufnych]', '[Examples of Confidential Information]'));
-        if (ndaTermInput) ndaTermInput.addEventListener('input', () => updateBilingualPreviewText(previewNdaTerm_pl, previewNdaTerm_en, ndaTermInput.value, '[Okres obowiązywania poufności]', '[Confidentiality Period]'));
+        if (disclosingPartyNameInput) disclosingPartyNameInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosingPartyName_pl, previewDisclosingPartyName_en, disclosingPartyNameInput.value, '[Nazwa Strony Ujawniającej]', '[Disclosing Party Name: '));
+        if (disclosingPartyAddressInput) disclosingPartyAddressInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosingPartyAddress_pl, previewDisclosingPartyAddress_en, disclosingPartyAddressInput.value, '[Adres Strony Ujawniającej]', '[Disclosing Party Address: '));
+        if (receivingPartyNameInput) receivingPartyNameInput.addEventListener('input', () => updateBilingualPreviewText(previewReceivingPartyName_pl, previewReceivingPartyName_en, receivingPartyNameInput.value, '[Nazwa Strony Otrzymującej]', '[Receiving Party Name: '));
+        if (receivingPartyAddressInput) receivingPartyAddressInput.addEventListener('input', () => updateBilingualPreviewText(previewReceivingPartyAddress_pl, previewReceivingPartyAddress_en, receivingPartyAddressInput.value, '[Adres Strony Otrzymującej]', '[Receiving Party Address: '));
+        if (disclosurePurposeInput) disclosurePurposeInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosurePurpose_pl, previewDisclosurePurpose_en, disclosurePurposeInput.value, '[Cel ujawnienia Informacji Poufnych]', '[Purpose of Disclosure: '));
+        if (confidentialInfoDefinitionInput) confidentialInfoDefinitionInput.addEventListener('input', () => updateBilingualPreviewText(previewConfidentialInfoDefinition_pl, previewConfidentialInfoDefinition_en, confidentialInfoDefinitionInput.value, '[Przykłady Informacji Poufnych]', '[Examples of Confidential Information: '));
+        if (ndaTermInput) ndaTermInput.addEventListener('input', () => updateBilingualPreviewText(previewNdaTerm_pl, previewNdaTerm_en, ndaTermInput.value, '[Okres obowiązywania poufności]', '[Confidentiality Period: '));
         
         if (governingLawSelect) {
             governingLawSelect.addEventListener('change', () => {
@@ -773,13 +950,13 @@
             }
         }
 
-        updateBilingualPreviewText(previewDisclosingPartyName_pl, previewDisclosingPartyName_en, '', '[Nazwa Strony Ujawniającej]', '[Disclosing Party Name]');
-        updateBilingualPreviewText(previewDisclosingPartyAddress_pl, previewDisclosingPartyAddress_en, '', '[Adres Strony Ujawniającej]', '[Disclosing Party Address]');
-        updateBilingualPreviewText(previewReceivingPartyName_pl, previewReceivingPartyName_en, '', '[Nazwa Strony Otrzymującej]', '[Receiving Party Name]');
-        updateBilingualPreviewText(previewReceivingPartyAddress_pl, previewReceivingPartyAddress_en, '', '[Adres Strony Otrzymującej]', '[Receiving Party Address]');
-        updateBilingualPreviewText(previewDisclosurePurpose_pl, previewDisclosurePurpose_en, '', '[Cel ujawnienia Informacji Poufnych]', '[Purpose of Disclosure]');
-        updateBilingualPreviewText(previewConfidentialInfoDefinition_pl, previewConfidentialInfoDefinition_en, '', '[Przykłady Informacji Poufnych]', '[Examples of Confidential Information]');
-        updateBilingualPreviewText(previewNdaTerm_pl, previewNdaTerm_en, '', '[Okres obowiązywania poufności]', '[Confidentiality Period]');
+        updateBilingualPreviewText(previewDisclosingPartyName_pl, previewDisclosingPartyName_en, '', '[Nazwa Strony Ujawniającej]', '[Disclosing Party Name: ');
+        updateBilingualPreviewText(previewDisclosingPartyAddress_pl, previewDisclosingPartyAddress_en, '', '[Adres Strony Ujawniającej]', '[Disclosing Party Address: ');
+        updateBilingualPreviewText(previewReceivingPartyName_pl, previewReceivingPartyName_en, '', '[Nazwa Strony Otrzymującej]', '[Receiving Party Name: ');
+        updateBilingualPreviewText(previewReceivingPartyAddress_pl, previewReceivingPartyAddress_en, '', '[Adres Strony Otrzymującej]', '[Receiving Party Address: ');
+        updateBilingualPreviewText(previewDisclosurePurpose_pl, previewDisclosurePurpose_en, '', '[Cel ujawnienia Informacji Poufnych]', '[Purpose of Disclosure: ');
+        updateBilingualPreviewText(previewConfidentialInfoDefinition_pl, previewConfidentialInfoDefinition_en, '', '[Przykłady Informacji Poufnych]', '[Examples of Confidential Information: ');
+        updateBilingualPreviewText(previewNdaTerm_pl, previewNdaTerm_en, '', '[Okres obowiązywania poufności]', '[Confidentiality Period: ');
         if (governingLawSelect) {
             const initialSelectedTextPl = governingLawSelect.options[governingLawSelect.selectedIndex].text;
             let initialSelectedTextEn = initialSelectedTextPl;
