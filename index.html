@@ -14,8 +14,8 @@
           font-family: 'Inter', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
-          color: #374151; /* Domyślny kolor tekstu - Tailwind gray-700 */
-          background-color: #F9FAFB; /* Domyślne tło */
+          color: #374151; 
+          background-color: #F9FAFB; 
           background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.paragraph-sign %7B font-size: 28px; fill: %23d1d5db; opacity: 0.3; %7D%3C/style%3E%3Ctext x='10' y='30' class='paragraph-sign'%3E§%3C/text%3E%3Ctext x='60' y='75' class='paragraph-sign' transform='rotate(45 60 75)'%3E§%3C/text%3E%3Ctext x='30' y='85' class='paragraph-sign' transform='rotate(-30 30 85)'%3E§%3C/text%3E%3Ctext x='80' y='20' class='paragraph-sign' transform='rotate(15 80 20)'%3E§%3C/text%3E%3Ctext x='50' y='50' class='paragraph-sign' transform='rotate(-60 50 50)'%3E§%3C/text%3E%3C/svg%3E");
           background-repeat: repeat;
         }
@@ -93,47 +93,65 @@
         .company-logo:hover { filter: grayscale(0%); }
         @media (min-width: 640px) { .company-logo { max-height: 40px; } }
 
-        /* Style dla układu dwukolumnowego */
         .document-preview-content.bilingual-active .bilingual-section {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Dwie równe kolumny */
-            gap: 2rem; /* Odstęp między kolumnami */
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem; 
         }
         .document-preview-content.bilingual-active .lang-en {
-            display: block !important; /* Pokaż kolumnę angielską */
+            display: block !important;
         }
         .document-preview-content:not(.bilingual-active) .lang-en {
-            display: none !important; /* Ukryj kolumnę angielską, jeśli nie jest aktywny tryb dwujęzyczny */
-        }
-        .lang-pl, .lang-en {
-            /* Można dodać padding, jeśli potrzebny */
+            display: none !important;
         }
         .bilingual-section p, .bilingual-section h1, .bilingual-section h2, .bilingual-section h3 {
-            margin-bottom: 0.75em; /* Mniejszy margines dla lepszego dopasowania w kolumnach */
+            margin-bottom: 0.75em; 
+        }
+        /* Language switcher styles */
+        .language-switcher button {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+        .language-switcher button.active {
+            background-color: #DBEAFE; /* Tailwind blue-100 */
+            color: #1D4ED8; /* Tailwind blue-700 */
+            font-weight: 600;
+        }
+        /* Style for select options with flags */
+        #documentLanguage option {
+            font-size: 1.25rem; /* Adjust emoji size if needed */
+            padding: 0.25rem;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen" data-current-lang="pl">
 
     <header id="landing-header" class="bg-white shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
             <a href="#" data-navigo-home class="text-2xl font-bold text-slate-800">NDAapp<span class="docue-blue">.</span></a>
-            <div class="hidden md:flex items-center space-x-2">
-                <a href="#features" data-navigo class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Dlaczego NDAapp?</a>
-                <a href="#how-it-works" data-navigo class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Jak to działa?</a>
-                <a href="#generator-section-content" data-navigo-generator class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Generator</a>
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="#features" data-navigo class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors" data-lang-pl="Dlaczego NDAapp?" data-lang-en="Why NDAapp?">Dlaczego NDAapp?</a>
+                <a href="#how-it-works" data-navigo class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors" data-lang-pl="Jak to działa?" data-lang-en="How it works?">Jak to działa?</a>
+                <a href="#generator-section-content" data-navigo-generator class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors" data-lang-pl="Generator" data-lang-en="Generator">Generator</a>
             </div>
             <div class="flex items-center">
-                <button id="openLoginModalButton" class="bg-docue-blue text-white px-5 py-2.5 rounded-md hover-bg-docue-blue-dark text-sm font-semibold transition-colors shadow-sm">Zaloguj się</button>
+                <div class="language-switcher flex items-center space-x-1 mr-3 text-sm">
+                    <button id="lang-pl-button" class="active">PL</button>
+                    <span>/</span>
+                    <button id="lang-en-button">EN</button>
+                </div>
+                <button id="openLoginModalButton" class="bg-docue-blue text-white px-5 py-2.5 rounded-md hover-bg-docue-blue-dark text-sm font-semibold transition-colors shadow-sm" data-lang-pl="Zaloguj się" data-lang-en="Log in">Zaloguj się</button>
                 <button id="mobileMenuButton" class="md:hidden ml-3 text-slate-600 hover:text-docue-blue p-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>
         </nav>
         <div id="mobileMenu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
-            <a href="#features" data-navigo-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors">Dlaczego NDAapp?</a>
-            <a href="#how-it-works" data-navigo-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors">Jak to działa?</a>
-            <a href="#generator-section-content" data-navigo-generator-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors">Generator</a>
+            <a href="#features" data-navigo-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors" data-lang-pl="Dlaczego NDAapp?" data-lang-en="Why NDAapp?">Dlaczego NDAapp?</a>
+            <a href="#how-it-works" data-navigo-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors" data-lang-pl="Jak to działa?" data-lang-en="How it works?">Jak to działa?</a>
+            <a href="#generator-section-content" data-navigo-generator-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors" data-lang-pl="Generator" data-lang-en="Generator">Generator</a>
         </div>
     </header>
 
@@ -141,13 +159,13 @@
         <div id="landing-page-content-wrapper">
             <section id="hero-section" class="hero-section pt-20 pb-24 md:pt-28 md:pb-32 text-center overflow-hidden">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight" data-lang-pl="NDAapp - Profesjonalna umowa o poufności <br class='hidden md:inline'>w 5 minut" data-lang-en="NDAapp - Professional Non-Disclosure Agreement <br class='hidden md:inline'>in 5 minutes">
                         NDAapp - Profesjonalna umowa o poufności <br class="hidden md:inline">w 5 minut
                     </h1>
-                    <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
+                    <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto" data-lang-pl="Zabezpiecz swoją firmę błyskawicznie. NDAapp to inteligentny kreator umów o zachowaniu poufności, który przeprowadzi Cię przez cały proces krok po kroku." data-lang-en="Secure your business instantly. NDAapp is an intelligent non-disclosure agreement creator that will guide you through the entire process step by step.">
                         Zabezpiecz swoją firmę błyskawicznie. NDAapp to inteligentny kreator umów o zachowaniu poufności, który przeprowadzi Cię przez cały proces krok po kroku.
                     </p>
-                    <button data-cta-generator class="bg-docue-blue text-white font-semibold px-10 py-3.5 rounded-lg hover-bg-docue-blue-dark transition-colors text-lg shadow-md hover:shadow-lg">
+                    <button data-cta-generator class="bg-docue-blue text-white font-semibold px-10 py-3.5 rounded-lg hover-bg-docue-blue-dark transition-colors text-lg shadow-md hover:shadow-lg" data-lang-pl="Wypróbuj NDAapp" data-lang-en="Try NDAapp">
                         Wypróbuj NDAapp
                     </button>
                 </div>
@@ -155,7 +173,7 @@
 
             <section id="trusted-by-section" class="py-12 bg-slate-50">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <h3 class="text-center text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8">
+                    <h3 class="text-center text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8" data-lang-pl="Zaufali nam" data-lang-en="Trusted by">
                         Zaufali nam
                     </h3>
                     <div class="flex flex-wrap justify-center items-center gap-x-10 gap-y-8 md:gap-x-16 lg:gap-x-20">
@@ -170,29 +188,29 @@
             <section id="features" class="py-16 md:py-24 bg-white">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center mb-12 md:mb-16">
-                        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Dlaczego warto wybrać NDAapp?</h2>
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4" data-lang-pl="Dlaczego warto wybrać NDAapp?" data-lang-en="Why choose NDAapp?">Dlaczego warto wybrać NDAapp?</h2>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                         <div class="text-center p-6 bg-slate-50 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
                             <div class="feature-icon inline-block">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-slate-700 mb-2">Oszczędzasz czas i pieniądze</h3>
-                            <p class="text-slate-600 text-sm">Zapomnij o długich konsultacjach prawnych. Stwórz spersonalizowaną umowę NDA w zaledwie 5 minut, odpowiadając na proste pytania.</p>
+                            <h3 class="text-xl font-semibold text-slate-700 mb-2" data-lang-pl="Oszczędzasz czas i pieniądze" data-lang-en="Save time and money">Oszczędzasz czas i pieniądze</h3>
+                            <p class="text-slate-600 text-sm" data-lang-pl="Zapomnij o długich konsultacjach prawnych. Stwórz spersonalizowaną umowę NDA w zaledwie 5 minut, odpowiadając na proste pytania." data-lang-en="Forget long legal consultations. Create a personalized NDA in just 5 minutes by answering simple questions.">Zapomnij o długich konsultacjach prawnych. Stwórz spersonalizowaną umowę NDA w zaledwie 5 minut, odpowiadając na proste pytania.</p>
                         </div>
                         <div class="text-center p-6 bg-slate-50 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
                             <div class="feature-icon inline-block">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622A11.99 11.99 0 0018.402 6a11.959 11.959 0 01-1.043-.751" /></svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-slate-700 mb-2">Masz pewność bezpieczeństwa</h3>
-                            <p class="text-slate-600 text-sm">Korzystaj z sprawdzonych klauzul prawnych, opracowanych przez doświadczonych prawników. Każda umowa jest dostosowana do Twoich indywidualnych potrzeb biznesowych.</p>
+                            <h3 class="text-xl font-semibold text-slate-700 mb-2" data-lang-pl="Masz pewność bezpieczeństwa" data-lang-en="You are assured of security">Masz pewność bezpieczeństwa</h3>
+                            <p class="text-slate-600 text-sm" data-lang-pl="Korzystaj z sprawdzonych klauzul prawnych, opracowanych przez doświadczonych prawników. Każda umowa jest dostosowana do Twoich indywidualnych potrzeb biznesowych." data-lang-en="Use proven legal clauses drafted by experienced lawyers. Each agreement is tailored to your individual business needs.">Korzystaj z sprawdzonych klauzul prawnych, opracowanych przez doświadczonych prawników. Każda umowa jest dostosowana do Twoich indywidualnych potrzeb biznesowych.</p>
                         </div>
                         <div class="text-center p-6 bg-slate-50 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
                             <div class="feature-icon inline-block">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-slate-700 mb-2">Wszystko jest proste i przejrzyste</h3>
-                            <p class="text-slate-600 text-sm">Przyjazny interfejs prowadzi Cię przez cały proces. Praktyczne objaśnienia prawne sprawią, że zrozumiesz każdy aspekt umowy.</p>
+                            <h3 class="text-xl font-semibold text-slate-700 mb-2" data-lang-pl="Wszystko jest proste i przejrzyste" data-lang-en="Everything is simple and clear">Wszystko jest proste i przejrzyste</h3>
+                            <p class="text-slate-600 text-sm" data-lang-pl="Przyjazny interfejs prowadzi Cię przez cały proces. Praktyczne objaśnienia prawne sprawią, że zrozumiesz każdy aspekt umowy." data-lang-en="A friendly interface guides you through the entire process. Practical legal explanations will make you understand every aspect of the agreement.">Przyjazny interfejs prowadzi Cię przez cały proces. Praktyczne objaśnienia prawne sprawią, że zrozumiesz każdy aspekt umowy.</p>
                         </div>
                     </div>
                 </div>
@@ -201,23 +219,23 @@
             <section id="how-it-works" class="py-16 md:py-24 bg-slate-50">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center mb-12 md:mb-16">
-                        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Jak to działa?</h2>
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4" data-lang-pl="Jak to działa?" data-lang-en="How it works?">Jak to działa?</h2>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                         <div class="flex flex-col items-center text-center">
                             <div class="step-indicator">1</div>
-                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2">Odpowiedz na Pytania</h3>
-                            <p class="text-slate-600 text-sm">Odpowiedz na 32 precyzyjnie dobrane pytania, aby dostosować umowę.</p>
+                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2" data-lang-pl="Odpowiedz na Pytania" data-lang-en="Answer Questions">Odpowiedz na Pytania</h3>
+                            <p class="text-slate-600 text-sm" data-lang-pl="Odpowiedz na 32 precyzyjnie dobrane pytania, aby dostosować umowę." data-lang-en="Answer 32 precisely selected questions to customize the agreement.">Odpowiedz na 32 precyzyjnie dobrane pytania, aby dostosować umowę.</p>
                         </div>
                         <div class="flex flex-col items-center text-center">
                             <div class="step-indicator">2</div>
-                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2">Otrzymaj Umowę</h3>
-                            <p class="text-slate-600 text-sm">Otrzymaj profesjonalną umowę NDA dopasowaną do Twoich potrzeb.</p>
+                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2" data-lang-pl="Otrzymaj Umowę" data-lang-en="Receive Agreement">Otrzymaj Umowę</h3>
+                            <p class="text-slate-600 text-sm" data-lang-pl="Otrzymaj profesjonalną umowę NDA dopasowaną do Twoich potrzeb." data-lang-en="Receive a professional NDA tailored to your needs.">Otrzymaj profesjonalną umowę NDA dopasowaną do Twoich potrzeb.</p>
                         </div>
                         <div class="flex flex-col items-center text-center">
                             <div class="step-indicator">3</div>
-                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2">Zabezpiecz Biznes</h3>
-                            <p class="text-slate-600 text-sm">Zabezpiecz swój biznes i skup się na tym, co najważniejsze.</p>
+                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2" data-lang-pl="Zabezpiecz Biznes" data-lang-en="Secure Business">Zabezpiecz Biznes</h3>
+                            <p class="text-slate-600 text-sm" data-lang-pl="Zabezpiecz swój biznes i skup się na tym, co najważniejsze." data-lang-en="Secure your business and focus on what matters most.">Zabezpiecz swój biznes i skup się na tym, co najważniejsze.</p>
                         </div>
                     </div>
                 </div>
@@ -225,9 +243,9 @@
 
             <section id="cta-section" class="py-16 md:py-24 bg-white">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-6">NDAapp automatyzuje żmudny proces tworzenia umów</h2>
-                    <p class="text-lg text-slate-600 mb-10 max-w-2xl mx-auto">Eliminuje błędy i pozwala Tobie i Twoim prawnikom skupić się na strategicznych zadaniach. Oszczędzaj czas, minimalizuj ryzyko i rozwijaj swój biznes szybciej.</p>
-                    <button data-cta-generator class="bg-docue-blue text-white font-semibold px-10 py-3.5 rounded-lg hover-bg-docue-blue-dark transition-colors text-lg shadow-md hover:shadow-lg">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-6" data-lang-pl="NDAapp automatyzuje żmudny proces tworzenia umów" data-lang-en="NDAapp automates the tedious process of creating agreements">NDAapp automatyzuje żmudny proces tworzenia umów</h2>
+                    <p class="text-lg text-slate-600 mb-10 max-w-2xl mx-auto" data-lang-pl="Eliminuje błędy i pozwala Tobie i Twoim prawnikom skupić się na strategicznych zadaniach. Oszczędzaj czas, minimalizuj ryzyko i rozwijaj swój biznes szybciej." data-lang-en="It eliminates errors and allows you and your lawyers to focus on strategic tasks. Save time, minimize risk, and grow your business faster.">Eliminuje błędy i pozwala Tobie i Twoim prawnikom skupić się na strategicznych zadaniach. Oszczędzaj czas, minimalizuj ryzyko i rozwijaj swój biznes szybciej.</p>
+                    <button data-cta-generator class="bg-docue-blue text-white font-semibold px-10 py-3.5 rounded-lg hover-bg-docue-blue-dark transition-colors text-lg shadow-md hover:shadow-lg" data-lang-pl="Wypróbuj NDAapp już dziś!" data-lang-en="Try NDAapp today!">
                         Wypróbuj NDAapp już dziś!
                     </button>
                 </div>
@@ -235,18 +253,18 @@
         </div> <section id="generator-section-content" class="hidden pt-8 container mx-auto">
             <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
                 <div class="w-full lg:w-2/5 questions-panel p-6 rounded-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 120px);">
-                    <h2 class="text-2xl font-semibold text-slate-700 mb-6 border-b border-slate-200 pb-4">Kreator Umowy o Zachowaniu Poufności (NDA)</h2>
+                    <h2 class="text-2xl font-semibold text-slate-700 mb-6 border-b border-slate-200 pb-4" data-lang-pl="Kreator Umowy o Zachowaniu Poufności (NDA)" data-lang-en="Non-Disclosure Agreement (NDA) Creator">Kreator Umowy o Zachowaniu Poufności (NDA)</h2>
 
                     <div class="question-group mb-6 bg-white shadow-sm">
                         <div class="question-group-header p-4 rounded-t-lg">
-                            <h3 class="text-lg font-medium text-slate-700">Opcje Dokumentu</h3>
+                            <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Opcje Dokumentu" data-lang-en="Document Options">Opcje Dokumentu</h3>
                         </div>
                         <div class="p-4 space-y-5">
                             <div class="question-item">
-                                <label for="documentLanguage" class="block text-sm font-medium text-slate-600 mb-1">Język dokumentu:</label>
+                                <label for="documentLanguage" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Język dokumentu:" data-lang-en="Document language:">Język dokumentu:</label>
                                 <select id="documentLanguage" name="documentLanguage" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm">
-                                    <option value="pl">Polski</option>
-                                    <option value="pl_en">Polski / Angielski (dwukolumnowy)</option>
+                                    <option value="pl">🇵🇱</option>
+                                    <option value="pl_en">🇵🇱 / 🇬🇧</option>
                                 </select>
                             </div>
                         </div>
@@ -254,23 +272,23 @@
 
                     <div class="question-group mb-6 bg-white shadow-sm">
                         <div class="question-group-header p-4 rounded-t-lg">
-                            <h3 class="text-lg font-medium text-slate-700">Strony Umowy</h3>
+                            <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Strony Umowy" data-lang-en="Parties to the Agreement">Strony Umowy</h3>
                         </div>
                         <div class="p-4 space-y-5">
                             <div class="question-item">
-                                <label for="disclosingPartyName" class="block text-sm font-medium text-slate-600 mb-1">Strona Ujawniająca (pełna nazwa / firma):</label>
+                                <label for="disclosingPartyName" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Strona Ujawniająca (pełna nazwa / firma):" data-lang-en="Disclosing Party (full name / company):">Strona Ujawniająca (pełna nazwa / firma):</label>
                                 <input type="text" id="disclosingPartyName" name="disclosingPartyName" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. Firma X Sp. z o.o.">
                             </div>
                             <div class="question-item">
-                                <label for="disclosingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1">Adres Strony Ujawniającej:</label>
+                                <label for="disclosingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Adres Strony Ujawniającej:" data-lang-en="Disclosing Party Address:">Adres Strony Ujawniającej:</label>
                                 <input type="text" id="disclosingPartyAddress" name="disclosingPartyAddress" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. ul. Innowacyjna 1, Warszawa">
                             </div>
                              <div class="question-item">
-                                <label for="receivingPartyName" class="block text-sm font-medium text-slate-600 mb-1">Strona Otrzymująca (pełna nazwa / firma):</label>
+                                <label for="receivingPartyName" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Strona Otrzymująca (pełna nazwa / firma):" data-lang-en="Receiving Party (full name / company):">Strona Otrzymująca (pełna nazwa / firma):</label>
                                 <input type="text" id="receivingPartyName" name="receivingPartyName" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. Jan Kowalski">
                             </div>
                             <div class="question-item">
-                                <label for="receivingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1">Adres Strony Otrzymującej:</label>
+                                <label for="receivingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Adres Strony Otrzymującej:" data-lang-en="Receiving Party Address:">Adres Strony Otrzymującej:</label>
                                 <input type="text" id="receivingPartyAddress" name="receivingPartyAddress" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. ul. Projektowa 5, Kraków">
                             </div>
                         </div>
@@ -278,15 +296,15 @@
 
                     <div class="question-group mb-6 bg-white shadow-sm">
                         <div class="question-group-header p-4 rounded-t-lg">
-                            <h3 class="text-lg font-medium text-slate-700">Przedmiot Umowy</h3>
+                            <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Przedmiot Umowy" data-lang-en="Subject of the Agreement">Przedmiot Umowy</h3>
                         </div>
                         <div class="p-4 space-y-5">
                             <div class="question-item">
-                                <label for="disclosurePurpose" class="block text-sm font-medium text-slate-600 mb-1">Cel ujawnienia Informacji Poufnych:</label>
+                                <label for="disclosurePurpose" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Cel ujawnienia Informacji Poufnych:" data-lang-en="Purpose of disclosing Confidential Information:">Cel ujawnienia Informacji Poufnych:</label>
                                 <textarea id="disclosurePurpose" name="disclosurePurpose" rows="3" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. omówienie potencjalnej współpracy, analiza projektu Y"></textarea>
                             </div>
                             <div class="question-item">
-                                <label for="confidentialInfoDefinition" class="block text-sm font-medium text-slate-600 mb-1">Przykłady Informacji Poufnych (opcjonalnie):</label>
+                                <label for="confidentialInfoDefinition" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Przykłady Informacji Poufnych (opcjonalnie):" data-lang-en="Examples of Confidential Information (optional):">Przykłady Informacji Poufnych (opcjonalnie):</label>
                                 <textarea id="confidentialInfoDefinition" name="confidentialInfoDefinition" rows="3" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. plany biznesowe, dane finansowe, kody źródłowe, listy klientów"></textarea>
                             </div>
                         </div>
@@ -294,15 +312,15 @@
                     
                     <div class="question-group mb-6 bg-white shadow-sm">
                         <div class="question-group-header p-4 rounded-t-lg">
-                            <h3 class="text-lg font-medium text-slate-700">Okres Obowiązywania i Prawo</h3>
+                            <h3 class="text-lg font-medium text-slate-700" data-lang-pl="Okres Obowiązywania i Prawo" data-lang-en="Term and Governing Law">Okres Obowiązywania i Prawo</h3>
                         </div>
                         <div class="p-4 space-y-5">
                             <div class="question-item">
-                                <label for="ndaTerm" class="block text-sm font-medium text-slate-600 mb-1">Okres obowiązywania poufności (np. 3 lata):</label>
+                                <label for="ndaTerm" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Okres obowiązywania poufności (np. 3 lata):" data-lang-en="Confidentiality period (e.g., 3 years):">Okres obowiązywania poufności (np. 3 lata):</label>
                                 <input type="text" id="ndaTerm" name="ndaTerm" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. 5 lat od daty ujawnienia">
                             </div>
                              <div class="question-item">
-                                <label for="governingLaw" class="block text-sm font-medium text-slate-600 mb-1">Prawo właściwe dla umowy:</label>
+                                <label for="governingLaw" class="block text-sm font-medium text-slate-600 mb-1" data-lang-pl="Prawo właściwe dla umowy:" data-lang-en="Governing law for the agreement:">Prawo właściwe dla umowy:</label>
                                 <select id="governingLaw" name="governingLaw" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm">
                                     <option value="polskie">Prawo polskie</option>
                                     <option value="niemieckie">Prawo niemieckie</option>
@@ -314,7 +332,7 @@
                     </div>
 
                     <div class="mt-8 pt-6 border-t border-slate-200">
-                        <button type="button" id="generateDocFinalButton" class="w-full bg-accent-orange text-white font-semibold px-6 py-3 rounded-lg hover-bg-accent-orange-dark transition-colors text-lg shadow-md hover:shadow-lg">
+                        <button type="button" id="generateDocFinalButton" class="w-full bg-accent-orange text-white font-semibold px-6 py-3 rounded-lg hover-bg-accent-orange-dark transition-colors text-lg shadow-md hover:shadow-lg" data-lang-pl="Generuj Podgląd i Pobierz Dokument" data-lang-en="Generate Preview and Download Document">
                             Generuj Podgląd i Pobierz Dokument
                         </button>
                     </div>
@@ -322,7 +340,7 @@
 
                 <div class="w-full lg:w-3/5">
                     <div class="sticky-preview-header p-4 rounded-t-xl -mt-8 lg:mt-0">
-                         <h2 class="text-xl font-semibold text-slate-700">Podgląd Dokumentu</h2>
+                         <h2 class="text-xl font-semibold text-slate-700" data-lang-pl="Podgląd Dokumentu" data-lang-en="Document Preview">Podgląd Dokumentu</h2>
                     </div>
                     <div id="documentPreviewContent" class="document-preview-content p-6 md:p-8 rounded-b-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 180px);">
                         <div class="bilingual-section">
@@ -494,24 +512,24 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             <div class="text-center">
-                <h3 class="text-xl leading-6 font-bold text-slate-800 mb-2">Zaloguj się do NDAapp</h3>
-                <p class="text-sm text-slate-500 mb-6">Wybierz preferowaną metodę logowania, aby kontynuować.</p>
+                <h3 class="text-xl leading-6 font-bold text-slate-800 mb-2" data-lang-pl="Zaloguj się do NDAapp" data-lang-en="Log in to NDAapp">Zaloguj się do NDAapp</h3>
+                <p class="text-sm text-slate-500 mb-6" data-lang-pl="Wybierz preferowaną metodę logowania, aby kontynuować." data-lang-en="Choose your preferred login method to continue.">Wybierz preferowaną metodę logowania, aby kontynuować.</p>
                 <div class="mt-4 space-y-3">
                     <button class="login-provider-button w-full flex items-center justify-center px-4 py-2.5 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue">
                         <img src="https://www.google.com/favicon.ico" alt="Google icon" class="w-5 h-5 mr-3">
-                        Zaloguj przez Google
+                        <span data-lang-pl="Zaloguj przez Google" data-lang-en="Log in with Google">Zaloguj przez Google</span>
                     </button>
                     <button class="login-provider-button w-full flex items-center justify-center px-4 py-2.5 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue">
                         <svg class="w-5 h-5 mr-3 text-slate-700" fill="currentColor" viewBox="0 0 20 20"><path d="M10.516 6.944c.258-.023.52-.035.784-.035.695 0 1.359.105 1.965.298V5.53c0-.925-.707-1.69-1.591-1.838A10.018 10.018 0 0010 3.5c-.77 0-1.514.096-2.21.271-.885.148-1.592.913-1.592 1.838v1.677c.606-.193 1.27-.298 1.965-.298.263 0 .526.012.784.035zm-2.032 4.072c-.627.39-1.04.805-1.04 1.268 0 .048.002.095.005.141H6.05c-.003-.046-.005-.093-.005-.141 0-.96.95-1.965 2.438-2.544.43-.168.9-.29 1.39-.357.245-.033.492-.05.738-.05.246 0 .493.017.738.05.49.067.96.19 1.39.357 1.487.58 2.437 1.584 2.437 2.544 0 .048-.002.095-.005.141h-1.398c.003-.046.005-.093.005-.141 0-.463-.414-.878-1.04-1.268-.43-.268-.96-.43-1.532-.43s-1.102.162-1.532.43zm7.016-2.544c.018.14.028.283.028.43 0 1.04-.473 1.97-1.268 2.544-.43.268-.96-.43-1.532-.43s-1.102-.162-1.532-.43c-.795-.573-1.268-1.504-1.268-2.544 0-.147.01-.29.028-.43A4.48 4.48 0 0110 7.5c.96 0 1.848.308 2.544.828.696-.52 1.584-.828 2.544-.828.147 0 .29.01.43.028zM10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0z"></path></svg>
-                        Zaloguj przez Apple
+                        <span data-lang-pl="Zaloguj przez Apple" data-lang-en="Log in with Apple">Zaloguj przez Apple</span>
                     </button>
                     <button class="login-provider-button w-full flex items-center justify-center px-4 py-2.5 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue">
                         <svg class="w-5 h-5 mr-3 text-sky-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5h16v10H2V5zm0-2a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V5a2 2 0 00-2-2H2zm6 4h4v2H8V7zm0 4h4v2H8v-2z"></path></svg>
-                        Zaloguj przez Microsoft
+                        <span data-lang-pl="Zaloguj przez Microsoft" data-lang-en="Log in with Microsoft">Zaloguj przez Microsoft</span>
                     </button>
                 </div>
                 <div class="mt-8">
-                    <button id="continueWithoutLoginButton" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-docue-blue text-base font-medium text-white hover-bg-docue-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue sm:text-sm">
+                    <button id="continueWithoutLoginButton" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-docue-blue text-base font-medium text-white hover-bg-docue-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue sm:text-sm" data-lang-pl="Kontynuuj bez logowania (MVP)" data-lang-en="Continue without login (MVP)">
                         Kontynuuj bez logowania (MVP)
                     </button>
                 </div>
@@ -522,12 +540,12 @@
     <footer id="landing-footer" class="bg-slate-800 text-slate-400 text-center p-10 mt-0">
         <a href="#" data-navigo-home class="text-xl font-bold text-white mb-4 inline-block">NDAapp<span class="docue-blue">.</span></a>
         <div class="flex justify-center space-x-6 mb-6">
-            <a href="#" class="hover:text-white transition-colors text-sm">Polityka Prywatności</a>
-            <a href="#" class="hover:text-white transition-colors text-sm">Warunki Użytkowania</a>
-            <a href="#" class="hover:text-white transition-colors text-sm">Kontakt</a>
+            <a href="#" class="hover:text-white transition-colors text-sm" data-lang-pl="Polityka Prywatności" data-lang-en="Privacy Policy">Polityka Prywatności</a>
+            <a href="#" class="hover:text-white transition-colors text-sm" data-lang-pl="Warunki Użytkowania" data-lang-en="Terms of Use">Warunki Użytkowania</a>
+            <a href="#" class="hover:text-white transition-colors text-sm" data-lang-pl="Kontakt" data-lang-en="Contact">Kontakt</a>
         </div>
-        <p class="text-sm">&copy; <span id="currentYear"></span> NDAapp. Wszelkie prawa zastrzeżone.</p>
-        <p class="text-xs mt-1">Stworzone z myślą o uproszczeniu Twojej pracy z dokumentami.</p>
+        <p class="text-sm">&copy; <span id="currentYear"></span> NDAapp. <span data-lang-pl="Wszelkie prawa zastrzeżone." data-lang-en="All rights reserved.">Wszelkie prawa zastrzeżone.</span></p>
+        <p class="text-xs mt-1" data-lang-pl="Stworzone z myślą o uproszczeniu Twojej pracy z dokumentami." data-lang-en="Created to simplify your work with documents.">Stworzone z myślą o uproszczeniu Twojej pracy z dokumentami.</p>
     </footer>
 
     <script>
@@ -549,6 +567,43 @@
         // --- Document Language Choice ---
         const documentLanguageSelect = document.getElementById('documentLanguage');
         const documentPreviewContent = document.getElementById('documentPreviewContent');
+
+        // --- Global Page Language Switcher ---
+        const langPlButton = document.getElementById('lang-pl-button');
+        const langEnButton = document.getElementById('lang-en-button');
+        const bodyElement = document.body;
+
+        function setPageLanguage(lang) {
+            bodyElement.setAttribute('data-current-lang', lang);
+            document.documentElement.setAttribute('lang', lang); 
+
+            document.querySelectorAll('[data-lang-pl]').forEach(el => {
+                const translation = (lang === 'en' && el.dataset.langEn) ? el.dataset.langEn : el.dataset.langPl;
+                // Check if the element is an input/button or a text element
+                if (el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
+                    if (el.type === 'button' || el.type === 'submit' || el.tagName === 'BUTTON') {
+                        el.textContent = translation; // For button text
+                    } else {
+                        // Potentially for placeholder or value if needed, but mostly for textContent
+                    }
+                } else {
+                     el.innerHTML = translation; // Use innerHTML for elements that might contain <br>
+                }
+            });
+
+            if (lang === 'pl') {
+                langPlButton.classList.add('active');
+                langEnButton.classList.remove('active');
+            } else {
+                langEnButton.classList.add('active');
+                langPlButton.classList.remove('active');
+            }
+        }
+
+        if (langPlButton) langPlButton.addEventListener('click', () => setPageLanguage('pl'));
+        if (langEnButton) langEnButton.addEventListener('click', () => setPageLanguage('en'));
+        setPageLanguage('pl');
+
 
         function showLandingPage() {
             if (landingPageContentWrapper) landingPageContentWrapper.classList.remove('hidden');
@@ -681,7 +736,6 @@
                 element_pl.innerHTML = displayValue_pl;
             }
             if (element_en) {
-                // For English, we'll use the Polish value for now, or a prefixed placeholder
                 const displayValue_en = value ? value.replace(/\n/g, '<br>') : `<span class="placeholder-text">${placeholder_en_prefix}${placeholder_pl}]</span>`;
                 element_en.innerHTML = displayValue_en;
             }
@@ -701,7 +755,6 @@
         if (governingLawSelect) {
             governingLawSelect.addEventListener('change', () => {
                 const selectedTextPl = governingLawSelect.options[governingLawSelect.selectedIndex].text;
-                // Simple mapping for English law names for preview
                 let selectedTextEn = selectedTextPl;
                 if (selectedTextPl === "Prawo polskie") selectedTextEn = "Polish law";
                 else if (selectedTextPl === "Prawo niemieckie") selectedTextEn = "German law";
@@ -713,7 +766,6 @@
             });
         }
         
-        // Function to update a single language preview element (used by governingLaw)
         function updatePreviewText(element, value, placeholderText) {
             if (element) {
                 const displayValue = value ? value.replace(/\n/g, '<br>') : `<span class="placeholder-text">${placeholderText}</span>`;
@@ -721,8 +773,6 @@
             }
         }
 
-
-        // Inicjalizacja podglądu NDA
         updateBilingualPreviewText(previewDisclosingPartyName_pl, previewDisclosingPartyName_en, '', '[Nazwa Strony Ujawniającej]', '[Disclosing Party Name]');
         updateBilingualPreviewText(previewDisclosingPartyAddress_pl, previewDisclosingPartyAddress_en, '', '[Adres Strony Ujawniającej]', '[Disclosing Party Address]');
         updateBilingualPreviewText(previewReceivingPartyName_pl, previewReceivingPartyName_en, '', '[Nazwa Strony Otrzymującej]', '[Receiving Party Name]');
@@ -738,8 +788,6 @@
             updatePreviewText(previewGoverningLaw_en, initialSelectedTextEn, '[Governing Law]');
         }
 
-
-        // Language choice logic
         if (documentLanguageSelect && documentPreviewContent) {
             documentLanguageSelect.addEventListener('change', function() {
                 if (this.value === 'pl_en') {
@@ -748,7 +796,6 @@
                     documentPreviewContent.classList.remove('bilingual-active');
                 }
             });
-            // Ustawienie początkowego stanu na podstawie domyślnej wartości selecta
             if (documentLanguageSelect.value === 'pl_en') {
                 documentPreviewContent.classList.add('bilingual-active');
             } else {
