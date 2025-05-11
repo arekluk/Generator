@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDAapp - Inteligentne Umowy o Zachowaniu Poufności (Podgląd Statyczny)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Globalne style */
+        body {
+          font-family: 'Inter', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          color: #374151; /* Domyślny kolor tekstu - Tailwind gray-700 */
+          background-color: #F9FAFB; /* Domyślne tło */
+          /* Delikatny wzór tła dla całej strony */
+          background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23e5e7eb' fill-opacity='0.4'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414zM41.95 17.536l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* --- Kolory Główne (Inspiracja Docue dla Landing Page) --- */
+        .docue-blue { color: #2563EB; } /* Tailwind blue-600 */
+        .bg-docue-blue { background-color: #2563EB; }
+        .border-docue-blue { border-color: #2563EB; }
+        .hover-bg-docue-blue-dark:hover { background-color: #1D4ED8; } /* Tailwind blue-700 */
+
+        /* --- Pomarańczowy Akcent (Dla Generatora / Drugorzędny) --- */
+        .accent-orange { color: #FF7043; }
+        .bg-accent-orange { background-color: #FF7043; }
+        .border-accent-orange { border-color: #FF7043; }
+        .hover-bg-accent-orange-dark:hover { background-color: #F4511E; }
+        .focus-ring-accent-orange:focus {
+          outline: 2px solid #FF7043;
+          outline-offset: 2px;
+          box-shadow: 0 0 0 2px rgba(255, 112, 67, 0.3);
+        }
+        .placeholder-accent-orange::placeholder {
+          color: #FFAB91; opacity: 1;
+        }
+
+        /* Stylizacja dla podglądu dokumentu */
+        .document-preview-content {
+          background-color: #FFFFFF; color: #263238; border: 1px solid #CFD8DC;
+          min-height: 500px; font-size: 15px;
+        }
+        .document-preview-content h1, .document-preview-content h2, .document-preview-content h3 {
+          font-family: 'Merriweather', serif; color: #1A2327;
+        }
+        .document-preview-content p { line-height: 1.7; margin-bottom: 1em; }
+        .document-preview-content .placeholder-text {
+          color: #FF8A65; background-color: rgba(255, 112, 67, 0.05);
+          padding: 0 2px; border-radius: 3px;
+          font-style: normal;
+        }
+        .document-preview-content strong { font-weight: 600; }
+
+        /* Panel pytań */
+        .questions-panel { background-color: #F8FAFC; } /* Tailwind slate-50 */
+        .question-group { border: 1px solid #E2E8F0; border-radius: 8px; transition: all 0.3s ease-in-out; } /* Tailwind slate-200 */
+        .question-group-header { background-color: #FFFFFF; border-bottom: 1px solid #E2E8F0; }
+        .question-item:focus-within { background-color: rgba(255, 112, 67, 0.03); }
+        .input-field {
+          border-color: #CBD5E1; /* Tailwind slate-300 */
+          transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .input-field:focus { border-color: #FF7043; box-shadow: 0 0 0 1px #FF7043; }
+
+        .dynamic-section {
+          max-height: 0; overflow: hidden;
+          transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+          opacity: 0;
+        }
+        .dynamic-section.open { max-height: 1000px; opacity: 1; }
+
+        .sticky-preview-header {
+          position: sticky; top: 64px; /* Wysokość nagłówka */
+          z-index: 10; background-color: #F8FAFC; /* Tailwind slate-50 */
+        }
+
+        /* Dodatkowe style dla Landing Page (Docue) */
+        .hero-section {
+          background: linear-gradient(135deg, #E0F2FE 0%, #FFFFFF 100%); /* Tailwind sky-100 to white */
+        }
+        .feature-icon svg {
+          width: 48px; height: 48px;
+          margin-bottom: 1rem;
+          color: #2563EB; /* Docue blue */
+        }
+        .step-indicator {
+          background-color: #2563EB; color: white;
+          width: 40px; height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 1.125rem; /* text-lg */
+          margin-bottom: 0.5rem;
+        }
+        /* Ukrywanie elementów */
+        .hidden {
+            display: none !important;
+        }
+        .company-logo {
+            max-height: 40px; /* Maksymalna wysokość dla logo */
+            width: auto; /* Zachowaj proporcje */
+            object-fit: contain; /* Dopasuj obraz bez przycinania */
+        }
+        @media (min-width: 640px) { /* sm breakpoint */
+            .company-logo {
+                max-height: 48px;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <header id="landing-header" class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+            <a href="#" data-navigo-home class="text-2xl font-bold text-slate-800">NDAapp<span class="docue-blue">.</span></a>
+            <div class="hidden md:flex items-center space-x-2">
+                <a href="#features" data-navigo class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Dlaczego NDAapp?</a>
+                <a href="#how-it-works" data-navigo class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Jak to działa?</a>
+                <a href="#generator-section-content" data-navigo-generator class="text-slate-600 hover:text-docue-blue px-3 py-2 rounded-md text-sm font-medium transition-colors">Generator</a>
+            </div>
+            <div class="flex items-center">
+                <button id="openLoginModalButton" class="bg-docue-blue text-white px-5 py-2.5 rounded-md hover-bg-docue-blue-dark text-sm font-semibold transition-colors shadow-sm">Zaloguj się</button>
+                <button id="mobileMenuButton" class="md:hidden ml-3 text-slate-600 hover:text-docue-blue p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobileMenu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <a href="#features" data-navigo-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors">Dlaczego NDAapp?</a>
+            <a href="#how-it-works" data-navigo-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors">Jak to działa?</a>
+            <a href="#generator-section-content" data-navigo-generator-mobile class="block text-slate-600 hover:text-docue-blue hover:bg-slate-50 px-4 py-3 text-sm font-medium transition-colors">Generator</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <div id="landing-page-content-wrapper">
+            <section id="hero-section" class="hero-section pt-20 pb-24 md:pt-28 md:pb-32 text-center overflow-hidden">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
+                        NDAapp - Profesjonalna umowa o poufności <br class="hidden md:inline">w 5 minut
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
+                        Zabezpiecz swoją firmę błyskawicznie. NDAapp to inteligentny kreator umów o zachowaniu poufności, który przeprowadzi Cię przez cały proces krok po kroku.
+                    </p>
+                    <button data-cta-generator class="bg-docue-blue text-white font-semibold px-10 py-3.5 rounded-lg hover-bg-docue-blue-dark transition-colors text-lg shadow-md hover:shadow-lg">
+                        Wypróbuj NDAapp
+                    </button>
+                </div>
+            </section>
+
+            <section id="trusted-by-section" class="py-12 bg-slate-50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <h3 class="text-center text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8">
+                        Zaufali nam
+                    </h3>
+                    <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-6 md:gap-x-12 lg:gap-x-16">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/ORLEN_logo.svg/200px-ORLEN_logo.svg.png" alt="Logo Orlen" class="company-logo filter grayscale hover:grayscale-0 transition duration-300">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d1/Ferrari-Logo.svg/150px-Ferrari-Logo.svg.png" alt="Logo Ferrari" class="company-logo filter grayscale hover:grayscale-0 transition duration-300">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/IKEA_logo.svg/150px-IKEA_logo.svg.png" alt="Logo IKEA" class="company-logo filter grayscale hover:grayscale-0 transition duration-300">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/UBS_Logo_2016.svg/120px-UBS_Logo_2016.svg.png" alt="Logo UBS" class="company-logo filter grayscale hover:grayscale-0 transition duration-300">
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="py-16 md:py-24 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12 md:mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Dlaczego warto wybrać NDAapp?</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                        <div class="text-center p-6 bg-slate-50 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
+                            <div class="feature-icon inline-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-slate-700 mb-2">Oszczędzasz czas i pieniądze</h3>
+                            <p class="text-slate-600 text-sm">Zapomnij o długich konsultacjach prawnych. Stwórz spersonalizowaną umowę NDA w zaledwie 5 minut, odpowiadając na proste pytania.</p>
+                        </div>
+                        <div class="text-center p-6 bg-slate-50 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
+                            <div class="feature-icon inline-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622A11.99 11.99 0 0018.402 6a11.959 11.959 0 01-1.043-.751" /></svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-slate-700 mb-2">Masz pewność bezpieczeństwa</h3>
+                            <p class="text-slate-600 text-sm">Korzystaj z sprawdzonych klauzul prawnych, opracowanych przez doświadczonych prawników. Każda umowa jest dostosowana do Twoich indywidualnych potrzeb biznesowych.</p>
+                        </div>
+                        <div class="text-center p-6 bg-slate-50 rounded-xl shadow-sm hover:shadow-lg transition-shadow">
+                            <div class="feature-icon inline-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-slate-700 mb-2">Wszystko jest proste i przejrzyste</h3>
+                            <p class="text-slate-600 text-sm">Przyjazny interfejs prowadzi Cię przez cały proces. Praktyczne objaśnienia prawne sprawią, że zrozumiesz każdy aspekt umowy.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="how-it-works" class="py-16 md:py-24 bg-slate-50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12 md:mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Jak to działa?</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="step-indicator">1</div>
+                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2">Odpowiedz na Pytania</h3>
+                            <p class="text-slate-600 text-sm">Odpowiedz na 32 precyzyjnie dobrane pytania, aby dostosować umowę.</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div class="step-indicator">2</div>
+                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2">Otrzymaj Umowę</h3>
+                            <p class="text-slate-600 text-sm">Otrzymaj profesjonalną umowę NDA dopasowaną do Twoich potrzeb.</p>
+                        </div>
+                        <div class="flex flex-col items-center text-center">
+                            <div class="step-indicator">3</div>
+                            <h3 class="text-xl font-semibold text-slate-700 mt-3 mb-2">Zabezpiecz Biznes</h3>
+                            <p class="text-slate-600 text-sm">Zabezpiecz swój biznes i skup się na tym, co najważniejsze.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="cta-section" class="py-16 md:py-24 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-6">NDAapp automatyzuje żmudny proces tworzenia umów</h2>
+                    <p class="text-lg text-slate-600 mb-10 max-w-2xl mx-auto">Eliminuje błędy i pozwala Tobie i Twoim prawnikom skupić się na strategicznych zadaniach. Oszczędzaj czas, minimalizuj ryzyko i rozwijaj swój biznes szybciej.</p>
+                    <button data-cta-generator class="bg-docue-blue text-white font-semibold px-10 py-3.5 rounded-lg hover-bg-docue-blue-dark transition-colors text-lg shadow-md hover:shadow-lg">
+                        Wypróbuj NDAapp już dziś!
+                    </button>
+                </div>
+            </section>
+        </div> <section id="generator-section-content" class="hidden pt-8 container mx-auto">
+            <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                <div class="w-full lg:w-2/5 questions-panel p-6 rounded-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 120px);">
+                    <h2 class="text-2xl font-semibold text-slate-700 mb-6 border-b border-slate-200 pb-4">Kreator Umowy o Zachowaniu Poufności (NDA)</h2>
+
+                    <div class="question-group mb-6 bg-white shadow-sm">
+                        <div class="question-group-header p-4 rounded-t-lg">
+                            <h3 class="text-lg font-medium text-slate-700">Strony Umowy</h3>
+                        </div>
+                        <div class="p-4 space-y-5">
+                            <div class="question-item">
+                                <label for="disclosingPartyName" class="block text-sm font-medium text-slate-600 mb-1">Strona Ujawniająca (pełna nazwa / firma):</label>
+                                <input type="text" id="disclosingPartyName" name="disclosingPartyName" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. Firma X Sp. z o.o.">
+                            </div>
+                            <div class="question-item">
+                                <label for="disclosingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1">Adres Strony Ujawniającej:</label>
+                                <input type="text" id="disclosingPartyAddress" name="disclosingPartyAddress" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. ul. Innowacyjna 1, Warszawa">
+                            </div>
+                             <div class="question-item">
+                                <label for="receivingPartyName" class="block text-sm font-medium text-slate-600 mb-1">Strona Otrzymująca (pełna nazwa / firma):</label>
+                                <input type="text" id="receivingPartyName" name="receivingPartyName" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. Jan Kowalski">
+                            </div>
+                            <div class="question-item">
+                                <label for="receivingPartyAddress" class="block text-sm font-medium text-slate-600 mb-1">Adres Strony Otrzymującej:</label>
+                                <input type="text" id="receivingPartyAddress" name="receivingPartyAddress" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. ul. Projektowa 5, Kraków">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group mb-6 bg-white shadow-sm">
+                        <div class="question-group-header p-4 rounded-t-lg">
+                            <h3 class="text-lg font-medium text-slate-700">Przedmiot Umowy</h3>
+                        </div>
+                        <div class="p-4 space-y-5">
+                            <div class="question-item">
+                                <label for="disclosurePurpose" class="block text-sm font-medium text-slate-600 mb-1">Cel ujawnienia Informacji Poufnych:</label>
+                                <textarea id="disclosurePurpose" name="disclosurePurpose" rows="3" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. omówienie potencjalnej współpracy, analiza projektu Y"></textarea>
+                            </div>
+                            <div class="question-item">
+                                <label for="confidentialInfoDefinition" class="block text-sm font-medium text-slate-600 mb-1">Przykłady Informacji Poufnych (opcjonalnie):</label>
+                                <textarea id="confidentialInfoDefinition" name="confidentialInfoDefinition" rows="3" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm placeholder-accent-orange" placeholder="np. plany biznesowe, dane finansowe, kody źródłowe, listy klientów"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-group mb-6 bg-white shadow-sm">
+                        <div class="question-group-header p-4 rounded-t-lg">
+                            <h3 class="text-lg font-medium text-slate-700">Okres Obowiązywania i Prawo</h3>
+                        </div>
+                        <div class="p-4 space-y-5">
+                            <div class="question-item">
+                                <label for="ndaTerm" class="block text-sm font-medium text-slate-600 mb-1">Okres obowiązywania poufności (np. 3 lata):</label>
+                                <input type="text" id="ndaTerm" name="ndaTerm" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm" placeholder="np. 5 lat od daty ujawnienia">
+                            </div>
+                             <div class="question-item">
+                                <label for="governingLaw" class="block text-sm font-medium text-slate-600 mb-1">Prawo właściwe dla umowy:</label>
+                                <select id="governingLaw" name="governingLaw" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm">
+                                    <option value="polskie">Prawo polskie</option>
+                                    <option value="niemieckie">Prawo niemieckie</option>
+                                    <option value="angielskie">Prawo angielskie</option>
+                                    <option value="inne">Inne (określ w umowie)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-200">
+                        <button type="button" id="generateDocFinalButton" class="w-full bg-accent-orange text-white font-semibold px-6 py-3 rounded-lg hover-bg-accent-orange-dark transition-colors text-lg shadow-md hover:shadow-lg">
+                            Generuj Podgląd i Pobierz Dokument
+                        </button>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-3/5">
+                    <div class="sticky-preview-header p-4 rounded-t-xl -mt-8 lg:mt-0">
+                         <h2 class="text-xl font-semibold text-slate-700">Podgląd Dokumentu</h2>
+                    </div>
+                    <div class="document-preview-content p-6 md:p-8 rounded-b-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 180px);">
+                        <h1 class="text-2xl font-bold mb-6 text-center">UMOWA O ZACHOWANIU POUFNOŚCI (NDA)</h1>
+                        
+                        <p>Zawarta w dniu <span id="preview_currentDate" class="placeholder-text">[Data bieżąca]</span> w <span id="preview_ndaCity" class="placeholder-text">[Miejscowość]</span> pomiędzy:</p>
+                        
+                        <p class="mt-4"><strong>Stroną Ujawniającą:</strong></p>
+                        <p class="ml-4" id="preview_disclosingPartyInfo">
+                            <span id="preview_disclosingPartyName" class="placeholder-text">[Nazwa Strony Ujawniającej]</span><br>
+                            z siedzibą w <span id="preview_disclosingPartyAddress" class="placeholder-text">[Adres Strony Ujawniającej]</span>
+                        </p>
+                        
+                        <p class="my-3">a</p>
+                        
+                        <p><strong>Stroną Otrzymującą:</strong></p>
+                        <p class="ml-4" id="preview_receivingPartyInfo">
+                           <span id="preview_receivingPartyName" class="placeholder-text">[Nazwa Strony Otrzymującej]</span><br>
+                           z siedzibą w <span id="preview_receivingPartyAddress" class="placeholder-text">[Adres Strony Otrzymującej]</span>
+                        </p>
+                        
+                        <p class="mt-4">zwanymi dalej łącznie „Stronami”, a każda z osobna „Stroną”.</p>
+
+                        <h2 class="text-xl font-semibold mt-6 mb-3">§ 1 Definicje</h2>
+                        <p>1. <strong>Informacje Poufne</strong> – oznaczają wszelkie informacje techniczne, handlowe, finansowe, organizacyjne, prawne lub inne posiadające wartość gospodarczą, ujawnione Stronie Otrzymującej przez Stronę Ujawniającą w jakiejkolwiek formie (pisemnej, ustnej, elektronicznej itp.) w związku z Celem Ujawnienia, w szczególności: <span id="preview_confidentialInfoDefinition" class="placeholder-text">[Przykłady Informacji Poufnych]</span>.</p>
+                        <p>2. <strong>Cel Ujawnienia</strong> – oznacza: <span id="preview_disclosurePurpose" class="placeholder-text">[Cel ujawnienia Informacji Poufnych]</span>.</p>
+
+                        <h2 class="text-xl font-semibold mt-6 mb-3">§ 2 Zobowiązanie do Poufności</h2>
+                        <p>1. Strona Otrzymująca zobowiązuje się do zachowania w ścisłej tajemnicy wszelkich Informacji Poufnych uzyskanych od Strony Ujawniającej oraz do wykorzystywania ich wyłącznie w Celu Ujawnienia.</p>
+                        <p>2. Zobowiązanie do zachowania poufności obowiązuje przez okres <span id="preview_ndaTerm" class="placeholder-text">[Okres obowiązywania poufności]</span>.</p>
+
+                        <h2 class="text-xl font-semibold mt-6 mb-3">§ 3 Postanowienia Końcowe</h2>
+                        <p>1. Prawem właściwym dla niniejszej Umowy jest <span id="preview_governingLaw" class="placeholder-text">[Prawo właściwe]</span>.</p>
+                        <p>2. Wszelkie spory wynikające z niniejszej Umowy Strony będą starały się rozwiązać polubownie.</p>
+                        
+                        <p class="mt-10 text-center text-slate-500"><span class="placeholder-text">[...] dalsze postanowienia umowy [...]</span></p>
+
+                        <div class="mt-12 pt-8 border-t border-slate-200 text-sm">
+                            <div class="grid grid-cols-2 gap-8">
+                                <div>
+                                    <p class="text-center">_________________________</p>
+                                    <p class="text-center">(Strona Ujawniająca)</p>
+                                </div>
+                                <div>
+                                    <p class="text-center">_________________________</p>
+                                    <p class="text-center">(Strona Otrzymująca)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> </main>
+
+    <div id="login-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 overflow-y-auto h-full w-full flex items-center justify-center z-[100]">
+        <div class="relative p-6 border-0 w-full max-w-md shadow-2xl rounded-xl bg-white mx-4">
+            <button id="closeLoginModalButton" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="text-center">
+                <h3 class="text-xl leading-6 font-bold text-slate-800 mb-2">Zaloguj się do NDAapp</h3>
+                <p class="text-sm text-slate-500 mb-6">Wybierz preferowaną metodę logowania, aby kontynuować.</p>
+                <div class="mt-4 space-y-3">
+                    <button class="login-provider-button w-full flex items-center justify-center px-4 py-2.5 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue">
+                        <img src="https://www.google.com/favicon.ico" alt="Google icon" class="w-5 h-5 mr-3">
+                        Zaloguj przez Google
+                    </button>
+                    <button class="login-provider-button w-full flex items-center justify-center px-4 py-2.5 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue">
+                        <svg class="w-5 h-5 mr-3 text-slate-700" fill="currentColor" viewBox="0 0 20 20"><path d="M10.516 6.944c.258-.023.52-.035.784-.035.695 0 1.359.105 1.965.298V5.53c0-.925-.707-1.69-1.591-1.838A10.018 10.018 0 0010 3.5c-.77 0-1.514.096-2.21.271-.885.148-1.592.913-1.592 1.838v1.677c.606-.193 1.27-.298 1.965-.298.263 0 .526.012.784.035zm-2.032 4.072c-.627.39-1.04.805-1.04 1.268 0 .048.002.095.005.141H6.05c-.003-.046-.005-.093-.005-.141 0-.96.95-1.965 2.438-2.544.43-.168.9-.29 1.39-.357.245-.033.492-.05.738-.05.246 0 .493.017.738.05.49.067.96.19 1.39.357 1.487.58 2.437 1.584 2.437 2.544 0 .048-.002.095-.005.141h-1.398c.003-.046.005-.093.005-.141 0-.463-.414-.878-1.04-1.268-.43-.268-.96-.43-1.532-.43s-1.102.162-1.532.43zm7.016-2.544c.018.14.028.283.028.43 0 1.04-.473 1.97-1.268 2.544-.43.268-.96-.43-1.532-.43s-1.102-.162-1.532-.43c-.795-.573-1.268-1.504-1.268-2.544 0-.147.01-.29.028-.43A4.48 4.48 0 0110 7.5c.96 0 1.848.308 2.544.828.696-.52 1.584-.828 2.544-.828.147 0 .29.01.43.028zM10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0z"></path></svg>
+                        Zaloguj przez Apple
+                    </button>
+                    <button class="login-provider-button w-full flex items-center justify-center px-4 py-2.5 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue">
+                        <svg class="w-5 h-5 mr-3 text-sky-600" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5h16v10H2V5zm0-2a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V5a2 2 0 00-2-2H2zm6 4h4v2H8V7zm0 4h4v2H8v-2z"></path></svg>
+                        Zaloguj przez Microsoft
+                    </button>
+                </div>
+                <div class="mt-8">
+                    <button id="continueWithoutLoginButton" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-docue-blue text-base font-medium text-white hover-bg-docue-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-docue-blue sm:text-sm">
+                        Kontynuuj bez logowania (MVP)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="landing-footer" class="bg-slate-800 text-slate-400 text-center p-10 mt-0">
+        <a href="#" data-navigo-home class="text-xl font-bold text-white mb-4 inline-block">NDAapp<span class="docue-blue">.</span></a>
+        <div class="flex justify-center space-x-6 mb-6">
+            <a href="#" class="hover:text-white transition-colors text-sm">Polityka Prywatności</a>
+            <a href="#" class="hover:text-white transition-colors text-sm">Warunki Użytkowania</a>
+            <a href="#" class="hover:text-white transition-colors text-sm">Kontakt</a>
+        </div>
+        <p class="text-sm">&copy; <span id="currentYear"></span> NDAapp. Wszelkie prawa zastrzeżone.</p>
+        <p class="text-xs mt-1">Stworzone z myślą o uproszczeniu Twojej pracy z dokumentami.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const landingPageContentWrapper = document.getElementById('landing-page-content-wrapper');
+        const generatorSectionContent = document.getElementById('generator-section-content');
+        
+        const loginModal = document.getElementById('login-modal');
+        const openLoginModalButton = document.getElementById('openLoginModalButton');
+        const closeLoginModalButton = document.getElementById('closeLoginModalButton');
+        const continueWithoutLoginButton = document.getElementById('continueWithoutLoginButton');
+        const loginProviderButtons = document.querySelectorAll('.login-provider-button');
+
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        function showLandingPage() {
+            if (landingPageContentWrapper) landingPageContentWrapper.classList.remove('hidden');
+            if (generatorSectionContent) generatorSectionContent.classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showGenerator(scrollTo = true) {
+            if (landingPageContentWrapper) landingPageContentWrapper.classList.add('hidden');
+            if (generatorSectionContent) generatorSectionContent.classList.remove('hidden');
+            if (scrollTo) {
+                setTimeout(() => {
+                    const generatorElement = document.getElementById('generator-section-content');
+                    if (generatorElement) {
+                        const headerOffset = 64; 
+                        const elementPosition = generatorElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                }, 50);
+            }
+        }
+
+        document.querySelectorAll('[data-navigo]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                showLandingPage(); 
+                setTimeout(() => { 
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const headerOffset = 64;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                    }
+                }, 50);
+            });
+        });
+        
+        document.querySelectorAll('[data-navigo-home]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showLandingPage();
+            });
+        });
+
+        document.querySelectorAll('[data-navigo-generator], [data-cta-generator], [data-navigo-generator-mobile]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+                showGenerator();
+            });
+        });
+        
+        if (openLoginModalButton && loginModal) {
+            openLoginModalButton.addEventListener('click', () => loginModal.classList.remove('hidden'));
+        }
+        if (closeLoginModalButton && loginModal) {
+            closeLoginModalButton.addEventListener('click', () => loginModal.classList.add('hidden'));
+        }
+        if (loginModal) {
+            loginModal.addEventListener('click', function(e) { 
+                if (e.target === this) {
+                    loginModal.classList.add('hidden');
+                }
+            });
+        }
+        const handleLoginAction = () => {
+            if (loginModal) loginModal.classList.add('hidden');
+            showGenerator();
+        };
+        if (continueWithoutLoginButton) {
+            continueWithoutLoginButton.addEventListener('click', handleLoginAction);
+        }
+        loginProviderButtons.forEach(button => {
+            button.addEventListener('click', handleLoginAction);
+        });
+
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        }
+        document.querySelectorAll('[data-navigo-mobile]').forEach(link => {
+            link.addEventListener('click', () => {
+                 if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // --- NDA Generator Logic ---
+        const disclosingPartyNameInput = document.getElementById('disclosingPartyName');
+        const disclosingPartyAddressInput = document.getElementById('disclosingPartyAddress');
+        const receivingPartyNameInput = document.getElementById('receivingPartyName');
+        const receivingPartyAddressInput = document.getElementById('receivingPartyAddress');
+        const disclosurePurposeInput = document.getElementById('disclosurePurpose');
+        const confidentialInfoDefinitionInput = document.getElementById('confidentialInfoDefinition');
+        const ndaTermInput = document.getElementById('ndaTerm');
+        const governingLawSelect = document.getElementById('governingLaw');
+
+        const previewCurrentDate = document.getElementById('preview_currentDate');
+        const previewNdaCity = document.getElementById('preview_ndaCity');
+        const previewDisclosingPartyName = document.getElementById('preview_disclosingPartyName');
+        const previewDisclosingPartyAddress = document.getElementById('preview_disclosingPartyAddress');
+        const previewReceivingPartyName = document.getElementById('preview_receivingPartyName');
+        const previewReceivingPartyAddress = document.getElementById('preview_receivingPartyAddress');
+        const previewDisclosurePurpose = document.getElementById('preview_disclosurePurpose');
+        const previewConfidentialInfoDefinition = document.getElementById('preview_confidentialInfoDefinition');
+        const previewNdaTerm = document.getElementById('preview_ndaTerm');
+        const previewGoverningLaw = document.getElementById('preview_governingLaw');
+
+        function updatePreviewText(element, value, placeholderText) {
+            if (element) {
+                const displayValue = value ? value.replace(/\n/g, '<br>') : `<span class="placeholder-text">${placeholderText}</span>`;
+                element.innerHTML = displayValue;
+            }
+        }
+        
+        // Inicjalizacja stałych wartości w podglądzie
+        updatePreviewText(previewCurrentDate, new Date().toLocaleDateString('pl-PL'), '[Data bieżąca]');
+        updatePreviewText(previewNdaCity, 'Warszawa', '[Miejscowość]'); // Domyślna miejscowość
+
+        // Event Listeners dla pól NDA
+        if (disclosingPartyNameInput) disclosingPartyNameInput.addEventListener('input', () => updatePreviewText(previewDisclosingPartyName, disclosingPartyNameInput.value, '[Nazwa Strony Ujawniającej]'));
+        if (disclosingPartyAddressInput) disclosingPartyAddressInput.addEventListener('input', () => updatePreviewText(previewDisclosingPartyAddress, disclosingPartyAddressInput.value, '[Adres Strony Ujawniającej]'));
+        if (receivingPartyNameInput) receivingPartyNameInput.addEventListener('input', () => updatePreviewText(previewReceivingPartyName, receivingPartyNameInput.value, '[Nazwa Strony Otrzymującej]'));
+        if (receivingPartyAddressInput) receivingPartyAddressInput.addEventListener('input', () => updatePreviewText(previewReceivingPartyAddress, receivingPartyAddressInput.value, '[Adres Strony Otrzymującej]'));
+        if (disclosurePurposeInput) disclosurePurposeInput.addEventListener('input', () => updatePreviewText(previewDisclosurePurpose, disclosurePurposeInput.value, '[Cel ujawnienia Informacji Poufnych]'));
+        if (confidentialInfoDefinitionInput) confidentialInfoDefinitionInput.addEventListener('input', () => updatePreviewText(previewConfidentialInfoDefinition, confidentialInfoDefinitionInput.value, '[Przykłady Informacji Poufnych]'));
+        if (ndaTermInput) ndaTermInput.addEventListener('input', () => updatePreviewText(previewNdaTerm, ndaTermInput.value, '[Okres obowiązywania poufności]'));
+        if (governingLawSelect) governingLawSelect.addEventListener('change', () => updatePreviewText(previewGoverningLaw, governingLawSelect.options[governingLawSelect.selectedIndex].text, '[Prawo właściwe]'));
+
+        // Inicjalizacja podglądu NDA
+        updatePreviewText(previewDisclosingPartyName, '', '[Nazwa Strony Ujawniającej]');
+        updatePreviewText(previewDisclosingPartyAddress, '', '[Adres Strony Ujawniającej]');
+        updatePreviewText(previewReceivingPartyName, '', '[Nazwa Strony Otrzymującej]');
+        updatePreviewText(previewReceivingPartyAddress, '', '[Adres Strony Otrzymującej]');
+        updatePreviewText(previewDisclosurePurpose, '', '[Cel ujawnienia Informacji Poufnych]');
+        updatePreviewText(previewConfidentialInfoDefinition, '', '[Przykłady Informacji Poufnych]');
+        updatePreviewText(previewNdaTerm, '', '[Okres obowiązywania poufności]');
+        updatePreviewText(previewGoverningLaw, governingLawSelect.options[governingLawSelect.selectedIndex].text, '[Prawo właściwe]');
+
+    });
+    </script>
+</body>
+</html>
