@@ -16,35 +16,26 @@
           -moz-osx-font-smoothing: grayscale;
           color: #374151; /* Domyślny kolor tekstu - Tailwind gray-700 */
           background-color: #F9FAFB; /* Domyślne tło */
-          /* Delikatny wzór tła dla całej strony */
-          background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23e5e7eb' fill-opacity='0.4'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414zM41.95 17.536l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+          background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cstyle%3E.paragraph-sign %7B font-size: 28px; fill: %23d1d5db; opacity: 0.3; %7D%3C/style%3E%3Ctext x='10' y='30' class='paragraph-sign'%3E§%3C/text%3E%3Ctext x='60' y='75' class='paragraph-sign' transform='rotate(45 60 75)'%3E§%3C/text%3E%3Ctext x='30' y='85' class='paragraph-sign' transform='rotate(-30 30 85)'%3E§%3C/text%3E%3Ctext x='80' y='20' class='paragraph-sign' transform='rotate(15 80 20)'%3E§%3C/text%3E%3Ctext x='50' y='50' class='paragraph-sign' transform='rotate(-60 50 50)'%3E§%3C/text%3E%3C/svg%3E");
+          background-repeat: repeat;
         }
 
         html {
           scroll-behavior: smooth;
         }
 
-        /* --- Kolory Główne (Inspiracja Docue dla Landing Page) --- */
-        .docue-blue { color: #2563EB; } /* Tailwind blue-600 */
+        .docue-blue { color: #2563EB; }
         .bg-docue-blue { background-color: #2563EB; }
-        .border-docue-blue { border-color: #2563EB; }
-        .hover-bg-docue-blue-dark:hover { background-color: #1D4ED8; } /* Tailwind blue-700 */
+        .hover-bg-docue-blue-dark:hover { background-color: #1D4ED8; }
 
-        /* --- Pomarańczowy Akcent (Dla Generatora / Drugorzędny) --- */
         .accent-orange { color: #FF7043; }
         .bg-accent-orange { background-color: #FF7043; }
-        .border-accent-orange { border-color: #FF7043; }
-        .hover-bg-accent-orange-dark:hover { background-color: #F4511E; }
         .focus-ring-accent-orange:focus {
           outline: 2px solid #FF7043;
           outline-offset: 2px;
           box-shadow: 0 0 0 2px rgba(255, 112, 67, 0.3);
         }
-        .placeholder-accent-orange::placeholder {
-          color: #FFAB91; opacity: 1;
-        }
-
-        /* Stylizacja dla podglądu dokumentu */
+        
         .document-preview-content {
           background-color: #FFFFFF; color: #263238; border: 1px solid #CFD8DC;
           min-height: 500px; font-size: 15px;
@@ -55,18 +46,16 @@
         .document-preview-content p { line-height: 1.7; margin-bottom: 1em; }
         .document-preview-content .placeholder-text {
           color: #FF8A65; background-color: rgba(255, 112, 67, 0.05);
-          padding: 0 2px; border-radius: 3px;
-          font-style: normal;
+          padding: 0 2px; border-radius: 3px; font-style: normal;
         }
         .document-preview-content strong { font-weight: 600; }
 
-        /* Panel pytań */
-        .questions-panel { background-color: #F8FAFC; } /* Tailwind slate-50 */
-        .question-group { border: 1px solid #E2E8F0; border-radius: 8px; transition: all 0.3s ease-in-out; } /* Tailwind slate-200 */
+        .questions-panel { background-color: #F8FAFC; }
+        .question-group { border: 1px solid #E2E8F0; border-radius: 8px; }
         .question-group-header { background-color: #FFFFFF; border-bottom: 1px solid #E2E8F0; }
         .question-item:focus-within { background-color: rgba(255, 112, 67, 0.03); }
         .input-field {
-          border-color: #CBD5E1; /* Tailwind slate-300 */
+          border-color: #CBD5E1;
           transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
         .input-field:focus { border-color: #FF7043; box-shadow: 0 0 0 1px #FF7043; }
@@ -79,43 +68,48 @@
         .dynamic-section.open { max-height: 1000px; opacity: 1; }
 
         .sticky-preview-header {
-          position: sticky; top: 64px; /* Wysokość nagłówka */
-          z-index: 10; background-color: #F8FAFC; /* Tailwind slate-50 */
+          position: sticky; top: 64px; 
+          z-index: 10; background-color: #F8FAFC;
         }
 
-        /* Dodatkowe style dla Landing Page (Docue) */
         .hero-section {
-          background: linear-gradient(135deg, #E0F2FE 0%, #FFFFFF 100%); /* Tailwind sky-100 to white */
+          background: linear-gradient(135deg, #E0F2FE 0%, #FFFFFF 100%);
         }
         .feature-icon svg {
           width: 48px; height: 48px;
-          margin-bottom: 1rem;
-          color: #2563EB; /* Docue blue */
+          margin-bottom: 1rem; color: #2563EB;
         }
         .step-indicator {
           background-color: #2563EB; color: white;
-          width: 40px; height: 40px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 1.125rem; /* text-lg */
-          margin-bottom: 0.5rem;
+          width: 40px; height: 40px; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          font-weight: bold; font-size: 1.125rem; margin-bottom: 0.5rem;
         }
-        /* Ukrywanie elementów */
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
         .company-logo {
-            max-height: 40px; /* Maksymalna wysokość dla logo */
-            width: auto; /* Zachowaj proporcje */
-            object-fit: contain; /* Dopasuj obraz bez przycinania */
+            max-height: 36px; width: auto; object-fit: contain; 
+            filter: grayscale(100%); transition: filter 0.3s ease-in-out;
         }
-        @media (min-width: 640px) { /* sm breakpoint */
-            .company-logo {
-                max-height: 48px;
-            }
+        .company-logo:hover { filter: grayscale(0%); }
+        @media (min-width: 640px) { .company-logo { max-height: 40px; } }
+
+        /* Style dla układu dwukolumnowego */
+        .document-preview-content.bilingual-active .bilingual-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Dwie równe kolumny */
+            gap: 2rem; /* Odstęp między kolumnami */
+        }
+        .document-preview-content.bilingual-active .lang-en {
+            display: block !important; /* Pokaż kolumnę angielską */
+        }
+        .document-preview-content:not(.bilingual-active) .lang-en {
+            display: none !important; /* Ukryj kolumnę angielską, jeśli nie jest aktywny tryb dwujęzyczny */
+        }
+        .lang-pl, .lang-en {
+            /* Można dodać padding, jeśli potrzebny */
+        }
+        .bilingual-section p, .bilingual-section h1, .bilingual-section h2, .bilingual-section h3 {
+            margin-bottom: 0.75em; /* Mniejszy margines dla lepszego dopasowania w kolumnach */
         }
     </style>
 </head>
@@ -164,11 +158,11 @@
                     <h3 class="text-center text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8">
                         Zaufali nam
                     </h3>
-                    <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-6 md:gap-x-12 lg:gap-x-16">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/ORLEN_logo.svg/200px-ORLEN_logo.svg.png" alt="Logo Orlen" class="company-logo filter grayscale hover:grayscale-0 transition duration-300">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d1/Ferrari-Logo.svg/150px-Ferrari-Logo.svg.png" alt="Logo Ferrari" class="company-logo filter grayscale hover:grayscale-0 transition duration-300">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/IKEA_logo.svg/150px-IKEA_logo.svg.png" alt="Logo IKEA" class="company-logo filter grayscale hover:grayscale-0 transition duration-300">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/UBS_Logo_2016.svg/120px-UBS_Logo_2016.svg.png" alt="Logo UBS" class="company-logo filter grayscale hover:grayscale-0 transition duration-300">
+                    <div class="flex flex-wrap justify-center items-center gap-x-10 gap-y-8 md:gap-x-16 lg:gap-x-20">
+                        <img src="https://logotyp.us/files/orlen.svg" alt="Logo Orlen" class="company-logo" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\'text-slate-500\'>Orlen</span>'">
+                        <img src="https://logotyp.us/files/ferrari.svg" alt="Logo Ferrari" class="company-logo" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\'text-slate-500\'>Ferrari</span>'">
+                        <img src="https://logotyp.us/files/ikea.svg" alt="Logo IKEA" class="company-logo" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\'text-slate-500\'>IKEA</span>'">
+                        <img src="https://logotyp.us/files/ubs.svg" alt="Logo UBS" class="company-logo" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\'text-slate-500\'>UBS</span>'">
                     </div>
                 </div>
             </section>
@@ -245,6 +239,21 @@
 
                     <div class="question-group mb-6 bg-white shadow-sm">
                         <div class="question-group-header p-4 rounded-t-lg">
+                            <h3 class="text-lg font-medium text-slate-700">Opcje Dokumentu</h3>
+                        </div>
+                        <div class="p-4 space-y-5">
+                            <div class="question-item">
+                                <label for="documentLanguage" class="block text-sm font-medium text-slate-600 mb-1">Język dokumentu:</label>
+                                <select id="documentLanguage" name="documentLanguage" class="input-field mt-1 block w-full px-3 py-2.5 border rounded-md shadow-sm focus-ring-accent-orange sm:text-sm">
+                                    <option value="pl">Polski</option>
+                                    <option value="pl_en">Polski / Angielski (dwukolumnowy)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group mb-6 bg-white shadow-sm">
+                        <div class="question-group-header p-4 rounded-t-lg">
                             <h3 class="text-lg font-medium text-slate-700">Strony Umowy</h3>
                         </div>
                         <div class="p-4 space-y-5">
@@ -315,50 +324,162 @@
                     <div class="sticky-preview-header p-4 rounded-t-xl -mt-8 lg:mt-0">
                          <h2 class="text-xl font-semibold text-slate-700">Podgląd Dokumentu</h2>
                     </div>
-                    <div class="document-preview-content p-6 md:p-8 rounded-b-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 180px);">
-                        <h1 class="text-2xl font-bold mb-6 text-center">UMOWA O ZACHOWANIU POUFNOŚCI (NDA)</h1>
+                    <div id="documentPreviewContent" class="document-preview-content p-6 md:p-8 rounded-b-xl shadow-lg overflow-y-auto" style="max-height: calc(100vh - 180px);">
+                        <div class="bilingual-section">
+                            <div class="lang-pl">
+                                <h1 class="text-2xl font-bold mb-6 text-center">UMOWA O ZACHOWANIU POUFNOŚCI (NDA)</h1>
+                            </div>
+                            <div class="lang-en hidden">
+                                <h1 class="text-2xl font-bold mb-6 text-center">NON-DISCLOSURE AGREEMENT (NDA)</h1>
+                            </div>
+                        </div>
                         
-                        <p>Zawarta w dniu <span id="preview_currentDate" class="placeholder-text">[Data bieżąca]</span> w <span id="preview_ndaCity" class="placeholder-text">[Miejscowość]</span> pomiędzy:</p>
+                        <div class="bilingual-section">
+                            <div class="lang-pl">
+                                <p>Zawarta w dniu <span id="preview_currentDate_pl" class="placeholder-text">[Data bieżąca]</span> w <span id="preview_ndaCity_pl" class="placeholder-text">[Miejscowość]</span> pomiędzy:</p>
+                            </div>
+                            <div class="lang-en hidden">
+                                <p>Concluded on <span id="preview_currentDate_en" class="placeholder-text">[Current Date]</span> in <span id="preview_ndaCity_en" class="placeholder-text">[City]</span> between:</p>
+                            </div>
+                        </div>
                         
-                        <p class="mt-4"><strong>Stroną Ujawniającą:</strong></p>
-                        <p class="ml-4" id="preview_disclosingPartyInfo">
-                            <span id="preview_disclosingPartyName" class="placeholder-text">[Nazwa Strony Ujawniającej]</span><br>
-                            z siedzibą w <span id="preview_disclosingPartyAddress" class="placeholder-text">[Adres Strony Ujawniającej]</span>
-                        </p>
+                        <div class="bilingual-section mt-4">
+                            <div class="lang-pl">
+                                <p><strong>Stroną Ujawniającą:</strong></p>
+                                <p class="ml-4" id="preview_disclosingPartyInfo_pl">
+                                    <span id="preview_disclosingPartyName_pl" class="placeholder-text">[Nazwa Strony Ujawniającej]</span><br>
+                                    z siedzibą w <span id="preview_disclosingPartyAddress_pl" class="placeholder-text">[Adres Strony Ujawniającej]</span>
+                                </p>
+                            </div>
+                            <div class="lang-en hidden">
+                                <p><strong>Disclosing Party:</strong></p>
+                                <p class="ml-4" id="preview_disclosingPartyInfo_en">
+                                    <span id="preview_disclosingPartyName_en" class="placeholder-text">[Disclosing Party Name]</span><br>
+                                    with its registered office in <span id="preview_disclosingPartyAddress_en" class="placeholder-text">[Disclosing Party Address]</span>
+                                </p>
+                            </div>
+                        </div>
                         
-                        <p class="my-3">a</p>
+                        <div class="bilingual-section my-3">
+                            <div class="lang-pl"><p>a</p></div>
+                            <div class="lang-en hidden"><p>and</p></div>
+                        </div>
                         
-                        <p><strong>Stroną Otrzymującą:</strong></p>
-                        <p class="ml-4" id="preview_receivingPartyInfo">
-                           <span id="preview_receivingPartyName" class="placeholder-text">[Nazwa Strony Otrzymującej]</span><br>
-                           z siedzibą w <span id="preview_receivingPartyAddress" class="placeholder-text">[Adres Strony Otrzymującej]</span>
-                        </p>
+                        <div class="bilingual-section">
+                            <div class="lang-pl">
+                                <p><strong>Stroną Otrzymującą:</strong></p>
+                                <p class="ml-4" id="preview_receivingPartyInfo_pl">
+                                   <span id="preview_receivingPartyName_pl" class="placeholder-text">[Nazwa Strony Otrzymującej]</span><br>
+                                   z siedzibą w <span id="preview_receivingPartyAddress_pl" class="placeholder-text">[Adres Strony Otrzymującej]</span>
+                                </p>
+                            </div>
+                             <div class="lang-en hidden">
+                                <p><strong>Receiving Party:</strong></p>
+                                <p class="ml-4" id="preview_receivingPartyInfo_en">
+                                   <span id="preview_receivingPartyName_en" class="placeholder-text">[Receiving Party Name]</span><br>
+                                   with its registered office in <span id="preview_receivingPartyAddress_en" class="placeholder-text">[Receiving Party Address]</span>
+                                </p>
+                            </div>
+                        </div>
                         
-                        <p class="mt-4">zwanymi dalej łącznie „Stronami”, a każda z osobna „Stroną”.</p>
+                        <div class="bilingual-section mt-4">
+                            <div class="lang-pl"><p>zwanymi dalej łącznie „Stronami”, a każda z osobna „Stroną”.</p></div>
+                            <div class="lang-en hidden"><p>hereinafter collectively referred to as the "Parties" and individually as a "Party".</p></div>
+                        </div>
 
-                        <h2 class="text-xl font-semibold mt-6 mb-3">§ 1 Definicje</h2>
-                        <p>1. <strong>Informacje Poufne</strong> – oznaczają wszelkie informacje techniczne, handlowe, finansowe, organizacyjne, prawne lub inne posiadające wartość gospodarczą, ujawnione Stronie Otrzymującej przez Stronę Ujawniającą w jakiejkolwiek formie (pisemnej, ustnej, elektronicznej itp.) w związku z Celem Ujawnienia, w szczególności: <span id="preview_confidentialInfoDefinition" class="placeholder-text">[Przykłady Informacji Poufnych]</span>.</p>
-                        <p>2. <strong>Cel Ujawnienia</strong> – oznacza: <span id="preview_disclosurePurpose" class="placeholder-text">[Cel ujawnienia Informacji Poufnych]</span>.</p>
+                        <div class="bilingual-section mt-6">
+                            <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 1 Definicje</h2></div>
+                            <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 1 Definitions</h2></div>
+                        </div>
+                        <div class="bilingual-section">
+                            <div class="lang-pl">
+                                <p>1. <strong>Informacje Poufne</strong> – oznaczają wszelkie informacje techniczne, handlowe, finansowe, organizacyjne, prawne lub inne posiadające wartość gospodarczą, ujawnione Stronie Otrzymującej przez Stronę Ujawniającą w jakiejkolwiek formie (pisemnej, ustnej, elektronicznej itp.) w związku z Celem Ujawnienia, w szczególności: <span id="preview_confidentialInfoDefinition_pl" class="placeholder-text">[Przykłady Informacji Poufnych]</span>.</p>
+                            </div>
+                            <div class="lang-en hidden">
+                                <p>1. <strong>Confidential Information</strong> – means any technical, commercial, financial, organizational, legal, or other information of economic value, disclosed to the Receiving Party by the Disclosing Party in any form (written, oral, electronic, etc.) in connection with the Purpose of Disclosure, in particular: <span id="preview_confidentialInfoDefinition_en" class="placeholder-text">[Examples of Confidential Information]</span>.</p>
+                            </div>
+                        </div>
+                        <div class="bilingual-section">
+                             <div class="lang-pl">
+                                <p>2. <strong>Cel Ujawnienia</strong> – oznacza: <span id="preview_disclosurePurpose_pl" class="placeholder-text">[Cel ujawnienia Informacji Poufnych]</span>.</p>
+                            </div>
+                            <div class="lang-en hidden">
+                                <p>2. <strong>Purpose of Disclosure</strong> – means: <span id="preview_disclosurePurpose_en" class="placeholder-text">[Purpose of disclosing Confidential Information]</span>.</p>
+                            </div>
+                        </div>
 
-                        <h2 class="text-xl font-semibold mt-6 mb-3">§ 2 Zobowiązanie do Poufności</h2>
-                        <p>1. Strona Otrzymująca zobowiązuje się do zachowania w ścisłej tajemnicy wszelkich Informacji Poufnych uzyskanych od Strony Ujawniającej oraz do wykorzystywania ich wyłącznie w Celu Ujawnienia.</p>
-                        <p>2. Zobowiązanie do zachowania poufności obowiązuje przez okres <span id="preview_ndaTerm" class="placeholder-text">[Okres obowiązywania poufności]</span>.</p>
+                        <div class="bilingual-section mt-6">
+                            <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 2 Zobowiązanie do Poufności</h2></div>
+                            <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 2 Confidentiality Obligation</h2></div>
+                        </div>
+                        <div class="bilingual-section">
+                            <div class="lang-pl">
+                                <p>1. Strona Otrzymująca zobowiązuje się do zachowania w ścisłej tajemnicy wszelkich Informacji Poufnych uzyskanych od Strony Ujawniającej oraz do wykorzystywania ich wyłącznie w Celu Ujawnienia.</p>
+                            </div>
+                            <div class="lang-en hidden">
+                                <p>1. The Receiving Party undertakes to keep strictly confidential all Confidential Information obtained from the Disclosing Party and to use it solely for the Purpose of Disclosure.</p>
+                            </div>
+                        </div>
+                        <div class="bilingual-section">
+                            <div class="lang-pl">
+                                <p>2. Zobowiązanie do zachowania poufności obowiązuje przez okres <span id="preview_ndaTerm_pl" class="placeholder-text">[Okres obowiązywania poufności]</span>.</p>
+                            </div>
+                            <div class="lang-en hidden">
+                                <p>2. The confidentiality obligation shall remain in force for a period of <span id="preview_ndaTerm_en" class="placeholder-text">[Confidentiality Period]</span>.</p>
+                            </div>
+                        </div>
 
-                        <h2 class="text-xl font-semibold mt-6 mb-3">§ 3 Postanowienia Końcowe</h2>
-                        <p>1. Prawem właściwym dla niniejszej Umowy jest <span id="preview_governingLaw" class="placeholder-text">[Prawo właściwe]</span>.</p>
-                        <p>2. Wszelkie spory wynikające z niniejszej Umowy Strony będą starały się rozwiązać polubownie.</p>
+                        <div class="bilingual-section mt-6">
+                            <div class="lang-pl"><h2 class="text-xl font-semibold mb-3">§ 3 Postanowienia Końcowe</h2></div>
+                            <div class="lang-en hidden"><h2 class="text-xl font-semibold mb-3">§ 3 Final Provisions</h2></div>
+                        </div>
+                        <div class="bilingual-section">
+                            <div class="lang-pl">
+                                <p>1. Prawem właściwym dla niniejszej Umowy jest <span id="preview_governingLaw_pl" class="placeholder-text">[Prawo właściwe]</span>.</p>
+                            </div>
+                            <div class="lang-en hidden">
+                                <p>1. The governing law for this Agreement shall be <span id="preview_governingLaw_en" class="placeholder-text">[Governing Law]</span>.</p>
+                            </div>
+                        </div>
+                        <div class="bilingual-section">
+                             <div class="lang-pl">
+                                <p>2. Wszelkie spory wynikające z niniejszej Umowy Strony będą starały się rozwiązać polubownie.</p>
+                            </div>
+                            <div class="lang-en hidden">
+                                <p>2. Any disputes arising from this Agreement shall be settled amicably by the Parties.</p>
+                            </div>
+                        </div>
                         
-                        <p class="mt-10 text-center text-slate-500"><span class="placeholder-text">[...] dalsze postanowienia umowy [...]</span></p>
+                        <div class="bilingual-section mt-10">
+                            <div class="lang-pl"><p class="text-center text-slate-500"><span class="placeholder-text">[...] dalsze postanowienia umowy [...]</span></p></div>
+                            <div class="lang-en hidden"><p class="text-center text-slate-500"><span class="placeholder-text">[...] further provisions of the agreement [...]</span></p></div>
+                        </div>
 
                         <div class="mt-12 pt-8 border-t border-slate-200 text-sm">
-                            <div class="grid grid-cols-2 gap-8">
-                                <div>
-                                    <p class="text-center">_________________________</p>
-                                    <p class="text-center">(Strona Ujawniająca)</p>
+                            <div class="bilingual-section">
+                                <div class="lang-pl">
+                                    <div class="grid grid-cols-2 gap-8">
+                                        <div>
+                                            <p class="text-center">_________________________</p>
+                                            <p class="text-center">(Strona Ujawniająca)</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-center">_________________________</p>
+                                            <p class="text-center">(Strona Otrzymująca)</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-center">_________________________</p>
-                                    <p class="text-center">(Strona Otrzymująca)</p>
+                                <div class="lang-en hidden">
+                                     <div class="grid grid-cols-2 gap-8">
+                                        <div>
+                                            <p class="text-center">_________________________</p>
+                                            <p class="text-center">(Disclosing Party)</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-center">_________________________</p>
+                                            <p class="text-center">(Receiving Party)</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -424,6 +545,10 @@
 
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
+
+        // --- Document Language Choice ---
+        const documentLanguageSelect = document.getElementById('documentLanguage');
+        const documentPreviewContent = document.getElementById('documentPreviewContent');
 
         function showLandingPage() {
             if (landingPageContentWrapper) landingPageContentWrapper.classList.remove('hidden');
@@ -526,48 +651,110 @@
         const ndaTermInput = document.getElementById('ndaTerm');
         const governingLawSelect = document.getElementById('governingLaw');
 
-        const previewCurrentDate = document.getElementById('preview_currentDate');
-        const previewNdaCity = document.getElementById('preview_ndaCity');
-        const previewDisclosingPartyName = document.getElementById('preview_disclosingPartyName');
-        const previewDisclosingPartyAddress = document.getElementById('preview_disclosingPartyAddress');
-        const previewReceivingPartyName = document.getElementById('preview_receivingPartyName');
-        const previewReceivingPartyAddress = document.getElementById('preview_receivingPartyAddress');
-        const previewDisclosurePurpose = document.getElementById('preview_disclosurePurpose');
-        const previewConfidentialInfoDefinition = document.getElementById('preview_confidentialInfoDefinition');
-        const previewNdaTerm = document.getElementById('preview_ndaTerm');
-        const previewGoverningLaw = document.getElementById('preview_governingLaw');
+        // Polish preview elements
+        const previewCurrentDate_pl = document.getElementById('preview_currentDate_pl');
+        const previewNdaCity_pl = document.getElementById('preview_ndaCity_pl');
+        const previewDisclosingPartyName_pl = document.getElementById('preview_disclosingPartyName_pl');
+        const previewDisclosingPartyAddress_pl = document.getElementById('preview_disclosingPartyAddress_pl');
+        const previewReceivingPartyName_pl = document.getElementById('preview_receivingPartyName_pl');
+        const previewReceivingPartyAddress_pl = document.getElementById('preview_receivingPartyAddress_pl');
+        const previewDisclosurePurpose_pl = document.getElementById('preview_disclosurePurpose_pl');
+        const previewConfidentialInfoDefinition_pl = document.getElementById('preview_confidentialInfoDefinition_pl');
+        const previewNdaTerm_pl = document.getElementById('preview_ndaTerm_pl');
+        const previewGoverningLaw_pl = document.getElementById('preview_governingLaw_pl');
 
+        // English preview elements
+        const previewCurrentDate_en = document.getElementById('preview_currentDate_en');
+        const previewNdaCity_en = document.getElementById('preview_ndaCity_en');
+        const previewDisclosingPartyName_en = document.getElementById('preview_disclosingPartyName_en');
+        const previewDisclosingPartyAddress_en = document.getElementById('preview_disclosingPartyAddress_en');
+        const previewReceivingPartyName_en = document.getElementById('preview_receivingPartyName_en');
+        const previewReceivingPartyAddress_en = document.getElementById('preview_receivingPartyAddress_en');
+        const previewDisclosurePurpose_en = document.getElementById('preview_disclosurePurpose_en');
+        const previewConfidentialInfoDefinition_en = document.getElementById('preview_confidentialInfoDefinition_en');
+        const previewNdaTerm_en = document.getElementById('preview_ndaTerm_en');
+        const previewGoverningLaw_en = document.getElementById('preview_governingLaw_en');
+        
+        function updateBilingualPreviewText(element_pl, element_en, value, placeholder_pl, placeholder_en_prefix = "[English: ") {
+            if (element_pl) {
+                const displayValue_pl = value ? value.replace(/\n/g, '<br>') : `<span class="placeholder-text">${placeholder_pl}</span>`;
+                element_pl.innerHTML = displayValue_pl;
+            }
+            if (element_en) {
+                // For English, we'll use the Polish value for now, or a prefixed placeholder
+                const displayValue_en = value ? value.replace(/\n/g, '<br>') : `<span class="placeholder-text">${placeholder_en_prefix}${placeholder_pl}]</span>`;
+                element_en.innerHTML = displayValue_en;
+            }
+        }
+        
+        updateBilingualPreviewText(previewCurrentDate_pl, previewCurrentDate_en, new Date().toLocaleDateString('pl-PL'), '[Data bieżąca]', '[Current Date]');
+        updateBilingualPreviewText(previewNdaCity_pl, previewNdaCity_en, 'Warszawa', '[Miejscowość]', '[City]'); 
+
+        if (disclosingPartyNameInput) disclosingPartyNameInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosingPartyName_pl, previewDisclosingPartyName_en, disclosingPartyNameInput.value, '[Nazwa Strony Ujawniającej]', '[Disclosing Party Name]'));
+        if (disclosingPartyAddressInput) disclosingPartyAddressInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosingPartyAddress_pl, previewDisclosingPartyAddress_en, disclosingPartyAddressInput.value, '[Adres Strony Ujawniającej]', '[Disclosing Party Address]'));
+        if (receivingPartyNameInput) receivingPartyNameInput.addEventListener('input', () => updateBilingualPreviewText(previewReceivingPartyName_pl, previewReceivingPartyName_en, receivingPartyNameInput.value, '[Nazwa Strony Otrzymującej]', '[Receiving Party Name]'));
+        if (receivingPartyAddressInput) receivingPartyAddressInput.addEventListener('input', () => updateBilingualPreviewText(previewReceivingPartyAddress_pl, previewReceivingPartyAddress_en, receivingPartyAddressInput.value, '[Adres Strony Otrzymującej]', '[Receiving Party Address]'));
+        if (disclosurePurposeInput) disclosurePurposeInput.addEventListener('input', () => updateBilingualPreviewText(previewDisclosurePurpose_pl, previewDisclosurePurpose_en, disclosurePurposeInput.value, '[Cel ujawnienia Informacji Poufnych]', '[Purpose of Disclosure]'));
+        if (confidentialInfoDefinitionInput) confidentialInfoDefinitionInput.addEventListener('input', () => updateBilingualPreviewText(previewConfidentialInfoDefinition_pl, previewConfidentialInfoDefinition_en, confidentialInfoDefinitionInput.value, '[Przykłady Informacji Poufnych]', '[Examples of Confidential Information]'));
+        if (ndaTermInput) ndaTermInput.addEventListener('input', () => updateBilingualPreviewText(previewNdaTerm_pl, previewNdaTerm_en, ndaTermInput.value, '[Okres obowiązywania poufności]', '[Confidentiality Period]'));
+        
+        if (governingLawSelect) {
+            governingLawSelect.addEventListener('change', () => {
+                const selectedTextPl = governingLawSelect.options[governingLawSelect.selectedIndex].text;
+                // Simple mapping for English law names for preview
+                let selectedTextEn = selectedTextPl;
+                if (selectedTextPl === "Prawo polskie") selectedTextEn = "Polish law";
+                else if (selectedTextPl === "Prawo niemieckie") selectedTextEn = "German law";
+                else if (selectedTextPl === "Prawo angielskie") selectedTextEn = "English law";
+                else if (selectedTextPl === "Inne (określ w umowie)") selectedTextEn = "Other (specify in agreement)";
+
+                updatePreviewText(previewGoverningLaw_pl, selectedTextPl, '[Prawo właściwe]');
+                updatePreviewText(previewGoverningLaw_en, selectedTextEn, '[Governing Law]');
+            });
+        }
+        
+        // Function to update a single language preview element (used by governingLaw)
         function updatePreviewText(element, value, placeholderText) {
             if (element) {
                 const displayValue = value ? value.replace(/\n/g, '<br>') : `<span class="placeholder-text">${placeholderText}</span>`;
                 element.innerHTML = displayValue;
             }
         }
-        
-        // Inicjalizacja stałych wartości w podglądzie
-        updatePreviewText(previewCurrentDate, new Date().toLocaleDateString('pl-PL'), '[Data bieżąca]');
-        updatePreviewText(previewNdaCity, 'Warszawa', '[Miejscowość]'); // Domyślna miejscowość
 
-        // Event Listeners dla pól NDA
-        if (disclosingPartyNameInput) disclosingPartyNameInput.addEventListener('input', () => updatePreviewText(previewDisclosingPartyName, disclosingPartyNameInput.value, '[Nazwa Strony Ujawniającej]'));
-        if (disclosingPartyAddressInput) disclosingPartyAddressInput.addEventListener('input', () => updatePreviewText(previewDisclosingPartyAddress, disclosingPartyAddressInput.value, '[Adres Strony Ujawniającej]'));
-        if (receivingPartyNameInput) receivingPartyNameInput.addEventListener('input', () => updatePreviewText(previewReceivingPartyName, receivingPartyNameInput.value, '[Nazwa Strony Otrzymującej]'));
-        if (receivingPartyAddressInput) receivingPartyAddressInput.addEventListener('input', () => updatePreviewText(previewReceivingPartyAddress, receivingPartyAddressInput.value, '[Adres Strony Otrzymującej]'));
-        if (disclosurePurposeInput) disclosurePurposeInput.addEventListener('input', () => updatePreviewText(previewDisclosurePurpose, disclosurePurposeInput.value, '[Cel ujawnienia Informacji Poufnych]'));
-        if (confidentialInfoDefinitionInput) confidentialInfoDefinitionInput.addEventListener('input', () => updatePreviewText(previewConfidentialInfoDefinition, confidentialInfoDefinitionInput.value, '[Przykłady Informacji Poufnych]'));
-        if (ndaTermInput) ndaTermInput.addEventListener('input', () => updatePreviewText(previewNdaTerm, ndaTermInput.value, '[Okres obowiązywania poufności]'));
-        if (governingLawSelect) governingLawSelect.addEventListener('change', () => updatePreviewText(previewGoverningLaw, governingLawSelect.options[governingLawSelect.selectedIndex].text, '[Prawo właściwe]'));
 
         // Inicjalizacja podglądu NDA
-        updatePreviewText(previewDisclosingPartyName, '', '[Nazwa Strony Ujawniającej]');
-        updatePreviewText(previewDisclosingPartyAddress, '', '[Adres Strony Ujawniającej]');
-        updatePreviewText(previewReceivingPartyName, '', '[Nazwa Strony Otrzymującej]');
-        updatePreviewText(previewReceivingPartyAddress, '', '[Adres Strony Otrzymującej]');
-        updatePreviewText(previewDisclosurePurpose, '', '[Cel ujawnienia Informacji Poufnych]');
-        updatePreviewText(previewConfidentialInfoDefinition, '', '[Przykłady Informacji Poufnych]');
-        updatePreviewText(previewNdaTerm, '', '[Okres obowiązywania poufności]');
-        updatePreviewText(previewGoverningLaw, governingLawSelect.options[governingLawSelect.selectedIndex].text, '[Prawo właściwe]');
+        updateBilingualPreviewText(previewDisclosingPartyName_pl, previewDisclosingPartyName_en, '', '[Nazwa Strony Ujawniającej]', '[Disclosing Party Name]');
+        updateBilingualPreviewText(previewDisclosingPartyAddress_pl, previewDisclosingPartyAddress_en, '', '[Adres Strony Ujawniającej]', '[Disclosing Party Address]');
+        updateBilingualPreviewText(previewReceivingPartyName_pl, previewReceivingPartyName_en, '', '[Nazwa Strony Otrzymującej]', '[Receiving Party Name]');
+        updateBilingualPreviewText(previewReceivingPartyAddress_pl, previewReceivingPartyAddress_en, '', '[Adres Strony Otrzymującej]', '[Receiving Party Address]');
+        updateBilingualPreviewText(previewDisclosurePurpose_pl, previewDisclosurePurpose_en, '', '[Cel ujawnienia Informacji Poufnych]', '[Purpose of Disclosure]');
+        updateBilingualPreviewText(previewConfidentialInfoDefinition_pl, previewConfidentialInfoDefinition_en, '', '[Przykłady Informacji Poufnych]', '[Examples of Confidential Information]');
+        updateBilingualPreviewText(previewNdaTerm_pl, previewNdaTerm_en, '', '[Okres obowiązywania poufności]', '[Confidentiality Period]');
+        if (governingLawSelect) {
+            const initialSelectedTextPl = governingLawSelect.options[governingLawSelect.selectedIndex].text;
+            let initialSelectedTextEn = initialSelectedTextPl;
+            if (initialSelectedTextPl === "Prawo polskie") initialSelectedTextEn = "Polish law";
+            updatePreviewText(previewGoverningLaw_pl, initialSelectedTextPl, '[Prawo właściwe]');
+            updatePreviewText(previewGoverningLaw_en, initialSelectedTextEn, '[Governing Law]');
+        }
 
+
+        // Language choice logic
+        if (documentLanguageSelect && documentPreviewContent) {
+            documentLanguageSelect.addEventListener('change', function() {
+                if (this.value === 'pl_en') {
+                    documentPreviewContent.classList.add('bilingual-active');
+                } else {
+                    documentPreviewContent.classList.remove('bilingual-active');
+                }
+            });
+            // Ustawienie początkowego stanu na podstawie domyślnej wartości selecta
+            if (documentLanguageSelect.value === 'pl_en') {
+                documentPreviewContent.classList.add('bilingual-active');
+            } else {
+                documentPreviewContent.classList.remove('bilingual-active');
+            }
+        }
     });
     </script>
 </body>
